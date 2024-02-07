@@ -11,10 +11,10 @@ class MapViewScreen extends StatefulWidget {
 }
 
 class _MapViewScreenState extends State<MapViewScreen> {
-  final AddressController addressController = Get.put(AddressController()); // Add this line
+  final AddressController addressController = Get.put(AddressController());
   final TextEditingController _controller = TextEditingController();
   final Dio _dio = Dio();
-  final String _apiKey = ''; // 여기에 Google API 키를 입력하세요.
+  final String _apiKey = '';
   List<dynamic> _autocompletePlaces = [];
   GoogleMapController? _mapController;
   LatLng? _selectedPosition;
