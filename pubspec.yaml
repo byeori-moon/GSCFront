@@ -39,6 +39,9 @@ dependencies:
   video_player: ^2.1.12
   google_maps_flutter: ^2.5.3
   geolocator: ^10.1.0
+  get: ^4.6.6
+  flutter_google_places: ^0.3.0
+  dio: ^5.4.0
 
 dev_dependencies:
   flutter_test:
