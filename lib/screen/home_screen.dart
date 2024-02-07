@@ -36,7 +36,6 @@ class HomeScreen extends StatelessWidget {
                   '지도에서 장소 확인하기',
                   textAlign: TextAlign.start,
                 ),
-
               ],
             ),
           ],

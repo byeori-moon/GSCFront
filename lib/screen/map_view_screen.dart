@@ -19,6 +19,27 @@ class _MapViewScreenState extends State<MapViewScreen> {
   GoogleMapController? _mapController;
   LatLng? _selectedPosition;
   final Set<Marker> _markers = {};
+  final FocusNode _focusNode = FocusNode();
+  bool _showMap = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        setState(() {
+          _showMap = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose(); // FocusNode를 dispose 해줍니다.
+    super.dispose();
+  }
+
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -46,7 +67,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   void _selectPlace(String placeId, String description) async {
-    _controller.text = description; // 입력 필드에 선택한 장소 이름으로 자동완성
+    FocusScope.of(context).unfocus();
+    _controller.text = description;
 
     final String url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=name,geometry&key=$_apiKey';
 
@@ -61,6 +83,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
           markerId: MarkerId(placeId),
           position: position,
         ));
+        _autocompletePlaces = [];
+        _showMap = true;
       });
       _mapController?.animateCamera(CameraUpdate.newLatLngZoom(position, 15));
     } catch (e) {
@@ -87,6 +111,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
               onChanged: _searchPlaces,
             ),
           ),
+
           Expanded(
             child: ListView.builder(
               itemCount: _autocompletePlaces.length,
@@ -99,7 +124,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
               },
             ),
           ),
-          if (_selectedPosition != null)
+          if (_selectedPosition != null && _showMap)
             Expanded(
               child: GoogleMap(
                 onMapCreated: _onMapCreated,
@@ -110,7 +135,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 markers: _markers,
               ),
             ),
-          if (_selectedPosition != null)
+          if (_selectedPosition != null && _showMap)
             ElevatedButton(
               onPressed: () {
                 final AddressController addressController = Get.find();
