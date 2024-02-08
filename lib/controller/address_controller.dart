@@ -5,6 +5,7 @@ class AddressController extends GetxController {
   var placeAddress = ''.obs;
   var latitude = 0.0.obs;
   var longitude = 0.0.obs;
+  var placeNickname = ''.obs;
 
   void updatePlace(String name, String address, double lat, double lng) {
     placeName.value = name;

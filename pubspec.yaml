@@ -42,6 +42,9 @@ dependencies:
   get: ^4.6.6
   flutter_google_places: ^0.3.0
   dio: ^5.4.0
+  google_sign_in: ^6.2.1
+  firebase_core: ^2.25.4
+  firebase_auth: ^4.17.4
 
 dev_dependencies:
   flutter_test:
@@ -59,7 +62,15 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - asset/img/
+  fonts:
+    - family: OHSQUARE
+      fonts:
+        - asset: asset/font/Cafe24Ohsquare-v2.0.ttf
+    - family: OHSQUAREAIR
+      fonts:
+        - asset: asset/font/Cafe24OhsquareAir-v2.0.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

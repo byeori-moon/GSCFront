@@ -8,6 +8,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
   SaveMyPlaceScreen({Key? key}) : super(key: key);
 
   final AddressController controller = Get.find<AddressController>();
+  final TextEditingController nicknameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +46,16 @@ class SaveMyPlaceScreen extends StatelessWidget {
                 'Longitude: ${controller.longitude}',
                 style: TextStyle(fontSize: 18),
               ),
+              TextFormField(
+                controller: nicknameController,
+                decoration: InputDecoration(
+                  labelText: 'Place Nickname',
+                  border: OutlineInputBorder(),
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-
-                  Get.back();
                 },
                 child: Text('Save Place'),
               ),
