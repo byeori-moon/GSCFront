@@ -14,7 +14,6 @@ Future<User?> signInWithGoogle() async {
         idToken: googleAuth.idToken,
       );
 
-      // Firebase에 사용자 정보 등록
       final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
       return userCredential.user;

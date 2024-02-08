@@ -1,4 +1,4 @@
-package com.example.gdsc
+package com.fire.fire
 
 import io.flutter.embedding.android.FlutterActivity
 
