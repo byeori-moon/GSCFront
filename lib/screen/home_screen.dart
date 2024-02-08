@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'map_view_screen.dart';
+import 'search_place_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(() => MapViewScreen());
+                    Get.to(() => SearchPlaceScreen());
                   },
                   child: Text('주소 검색'),
                 ),

@@ -5,12 +5,12 @@ import '../controller/address_controller.dart';
 import 'save_my_place_screen.dart';
 import 'package:dio/dio.dart';
 
-class MapViewScreen extends StatefulWidget {
+class SearchPlaceScreen extends StatefulWidget {
   @override
-  _MapViewScreenState createState() => _MapViewScreenState();
+  _SearchPlaceScreenState createState() => _SearchPlaceScreenState();
 }
 
-class _MapViewScreenState extends State<MapViewScreen> {
+class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
   final AddressController addressController = Get.put(AddressController());
   final TextEditingController _controller = TextEditingController();
   final Dio _dio = Dio();
