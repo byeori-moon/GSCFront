@@ -1,4 +1,6 @@
+import 'package:camera_pj/screen/sign_in_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../component/sign_in_component.dart';
@@ -8,40 +10,81 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: LoginButton(),
+        body: Column(
+          children: [
+            Image.asset('asset/img/default_character_main.png',fit: BoxFit.contain,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _GoogleButton(
+                      name: '구글 계정으로 로그인하기',
+                      onPressed: () {
+                        signInWithGoogle().then((user) {
+                          if (user != null) {
+                            print("로그인 성공: ${user.displayName}");
+                          }
+                        });
+                      },
+                    ),
+                    _GoogleButton(
+                      name: '구글 계정으로 회원가입하기',
+                      onPressed: () {
+                        signInWithGoogle().then((user) {
+                          if (user != null) {
+                            print("로그인 성공: ${user.displayName}");
+                            Get.to(SignInNameInput());
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class LoginButton extends StatefulWidget {
-  @override
-  _LoginButtonState createState() => _LoginButtonState();
-}
+class _GoogleButton extends StatelessWidget {
+  final String name;
+  final VoidCallback onPressed;
 
-class _LoginButtonState extends State<LoginButton> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      // 추가적으로 필요한 스코프를 여기에 명시할 수 있습니다.
-    ],
-  );
-
-
+  const _GoogleButton({
+    required this.name,
+    required this.onPressed,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        signInWithGoogle().then((user) {
-          if (user != null) {
-            print("로그인 성공: ${user.displayName}");
-          }
-        });
-      },
-      child: Text("Google로 로그인"),
+      onPressed: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset('asset/img/glogo.png'),
+          Text(
+            name,
+            style: TextStyle(color: Colors.black87, fontSize: 15.0),
+          ),
+          Opacity(
+            opacity: 0.0,
+            child: Image.asset('asset/img/glogo.png'),
+          ),
+        ],
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.white,
+        minimumSize: Size.fromHeight(50),
+        elevation: 1.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+      ),
     );
   }
 }

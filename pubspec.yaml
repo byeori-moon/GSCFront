@@ -62,7 +62,15 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - asset/img/
+  fonts:
+    - family: OHSQUARE
+      fonts:
+        - asset: asset/font/Cafe24Ohsquare-v2.0.ttf
+    - family: OHSQUAREAIR
+      fonts:
+        - asset: asset/font/Cafe24OhsquareAir-v2.0.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
