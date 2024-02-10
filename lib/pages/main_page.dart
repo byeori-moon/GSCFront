@@ -90,8 +90,8 @@ class MainPage extends StatelessWidget {
                         children: [
                           Image.asset(
                             'asset/img/camera_penguin.png',
-                            height: 40,
-                            width: 40,
+                            height: 50,
+                            width: 50,
                           ),
                           SizedBox(width: 14,),
                           Text(
@@ -129,8 +129,8 @@ class MainPage extends StatelessWidget {
                         children: [
                           Image.asset(
                             'asset/img/flag_penguin.png',
-                            height: 40,
-                            width: 40,
+                            height: 50,
+                            width: 50,
                           ),
                           SizedBox(width: 14,),
                           Text(
