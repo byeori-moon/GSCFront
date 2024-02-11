@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +54,7 @@ class MainPage extends StatelessWidget {
               },
             ),
             Text(
-              "지도에서 장소 확인하기",
+              "지도에서 장소 확인",
               textAlign: TextAlign.start,
               style: TextStyle(
                 color: BUTTON_BLUE,
@@ -63,6 +62,24 @@ class MainPage extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
+            Container(
+              width: 100,
+              height: 300,
+              child: FutureBuilder<Position>(
+                future: _getCurrentLocation(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Position currentPosition = snapshot.data!;
+                    return MapPage(currentPosition: currentPosition);
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+
             Container(
               height: 95,
               child: Row(
@@ -81,8 +98,7 @@ class MainPage extends StatelessWidget {
                         elevation: 3,
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20.0), // 원하는 radius 값으로 변경
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                       child: Row(
@@ -120,8 +136,7 @@ class MainPage extends StatelessWidget {
                         elevation: 3,
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(20.0), // 원하는 radius 값으로 변경
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                       child: Row(

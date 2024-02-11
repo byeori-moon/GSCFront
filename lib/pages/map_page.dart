@@ -22,8 +22,11 @@ class _MapPageState extends State<MapPage> {
     currentDate = DateTime.now();
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+
     LatLng currentLatLng = LatLng(
       widget.currentPosition.latitude,
       widget.currentPosition.longitude,
@@ -39,8 +42,7 @@ class _MapPageState extends State<MapPage> {
             borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
-            child:
-            GoogleMap(
+            child: GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: currentLatLng,
                 zoom: 10,
