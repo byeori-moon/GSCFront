@@ -1,5 +1,6 @@
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/object_controller.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -43,18 +44,16 @@ class _InformationScreenState extends State<InformationScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '콘센트1',
+                  objectController.objectInformationData.fireHazard.object,
                   style: TextStyle(
-                      fontFamily: 'OHSQUARE',
-                      fontSize: 30,
-                      color: BUTTON_BLUE),
+                      fontFamily: 'OHSQUARE', fontSize: 30, color: BUTTON_BLUE),
                 ),
                 SizedBox(
                   height: 40,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        onPrimary: BUTTON_BLUE,
+                        backgroundColor: Colors.white,
+                        foregroundColor: BUTTON_BLUE,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(999),
                         )),
@@ -87,7 +86,6 @@ class _InformationScreenState extends State<InformationScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
-
                 ListTile(
                   title: Text(
                     '🔥 화재 사례',
@@ -259,34 +257,88 @@ class _InformationScreenState extends State<InformationScreen> {
                 YoutubePlayer(
                   controller: _con,
                 ),
-                DataTable(
-                  columnSpacing: 38.0, // 열 간격 조정
-                  columns: [
-                    DataColumn(label: Text('제목')),
-                    DataColumn(label: Text('저자')),
-                    DataColumn(label: Text('출판연도')),
-                    DataColumn(label: Text('출판처')),
-                    DataColumn(label: Text('요약')),
-                    DataColumn(label: Text('링크')),
-                  ],
-                  rows: objectController.objectInformationData.scholarlyData
-                      .map<DataRow>((data) => DataRow(
-                            cells: [
-                              DataCell(Text(data.title)),
-                              DataCell(Text(
-                                  data.authors.join(', '))), // 저자들을 쉼표로 구분하여 나열
-                              DataCell(Text(data.pubYear)),
-                              DataCell(Text(data.venue)),
-                              DataCell(Text(data.abstract)),
-                              DataCell(IconButton(
-                                icon: Icon(Icons.link),
-                                onPressed: () {
-                                  // 여기에 URL을 열기 위한 로직 구현, 예: launchUrl(Uri.parse(data.pubUrl));
+                ListTile(
+                  title: Text(
+                    '📜 관련 논문',
+                    style: TextStyle(
+                        fontFamily: 'OHSQUARE',
+                        fontSize: 22,
+                        color: BUTTON_BLUE),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  margin: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: SHADOW_BLUE,
+                        blurRadius: 4,
+                        offset: Offset(2, 2), // 그림자의 방향
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: TextStyle(color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: '제목: \n',
+                                style: TextStyle(fontFamily: 'OHSQUARE',fontSize: 16)),
+                            TextSpan(
+                                text: '${objectController.objectInformationData.scholarlyData[0].title}\n\n',
+                                style: TextStyle(fontFamily: 'OHSQUAREAIR',fontSize: 15,height: 1.5)),
+                            TextSpan(
+                                text: '저자: \n',
+                                style: TextStyle(fontFamily: 'OHSQUARE',fontSize: 16)),
+                            TextSpan(
+                                text: '${objectController.objectInformationData.scholarlyData[0].authors}\n\n',
+                                style: TextStyle(fontFamily: 'OHSQUAREAIR',fontSize: 15,height: 1.5)),
+                            TextSpan(
+                                text: '출판년도: \n',
+                                style: TextStyle(fontFamily: 'OHSQUARE',fontSize: 16)),
+                            TextSpan(
+                                text: '${objectController.objectInformationData.scholarlyData[0].pubYear}\n\n',
+                                style: TextStyle(fontFamily: 'OHSQUAREAIR',fontSize: 15,height: 1.5)),
+                            TextSpan(
+                                text: '출판지: \n',
+                                style: TextStyle(fontFamily: 'OHSQUARE',fontSize: 16)),
+                            TextSpan(
+                                text: '${objectController.objectInformationData.scholarlyData[0].venue}\n\n',
+                                style: TextStyle(fontFamily: 'OHSQUAREAIR',fontSize: 15,height: 1.5)),
+                            TextSpan(
+                                text: '요약: \n',
+                                style: TextStyle(fontFamily: 'OHSQUARE',fontSize: 16)),
+                            TextSpan(
+                                text: '${objectController.objectInformationData.scholarlyData[0].abstract}\n\n',
+                                style: TextStyle(fontFamily: 'OHSQUAREAIR',fontSize: 15,height: 1.5)),
+
+                            TextSpan(
+                              text: '이곳을 클릭해서 논문 보기',
+                              style: TextStyle(
+                                  color: BUTTON_BLUE,
+                                  decoration: TextDecoration.underline,fontFamily: 'OHSQUAREAIR',fontSize: 18,),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DocumentWebView(
+                                          objectController.objectInformationData
+                                              .scholarlyData[0].pubUrl),
+                                    ),
+                                  );
                                 },
-                              )),
-                            ],
-                          ))
-                      .toList(),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -298,6 +350,39 @@ class _InformationScreenState extends State<InformationScreen> {
   }
 }
 
+class DocumentWebView extends StatefulWidget {
+  final String url;
+
+  DocumentWebView(this.url);
+
+  @override
+  State<DocumentWebView> createState() => _DocumentWebViewState();
+}
+
+class _DocumentWebViewState extends State<DocumentWebView> {
+  late Uri documentUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    documentUrl = Uri.parse(widget.url);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    WebViewController controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(documentUrl);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('📜 관련 논문'),
+      ),
+      body: WebViewWidget(
+        controller: controller,
+      ),
+    );
+  }
+}
 class NewsWebView extends StatefulWidget {
   final String url;
 
@@ -308,12 +393,12 @@ class NewsWebView extends StatefulWidget {
 }
 
 class _NewsWebViewState extends State<NewsWebView> {
-  late Uri newsUrl; // 변경된 부분: Uri 타입의 late 변수 선언
+  late Uri newsUrl;
 
   @override
   void initState() {
     super.initState();
-    newsUrl = Uri.parse(widget.url); // 여기에서 widget.url을 사용하여 Uri를 초기화
+    newsUrl = Uri.parse(widget.url);
   }
 
   @override
@@ -323,7 +408,7 @@ class _NewsWebViewState extends State<NewsWebView> {
       ..loadRequest(newsUrl);
     return Scaffold(
       appBar: AppBar(
-        title: Text('뉴스 내용'),
+        title: Text('🔥 화재 사례'),
       ),
       body: WebViewWidget(
         controller: controller,

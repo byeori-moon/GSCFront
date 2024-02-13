@@ -80,7 +80,7 @@ class _GoogleButton extends StatelessWidget {
         ],
       ),
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
+        backgroundColor: Colors.white,
         minimumSize: Size.fromHeight(50),
         elevation: 1.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),

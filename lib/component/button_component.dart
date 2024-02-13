@@ -14,8 +14,8 @@ class DefaultButton extends StatelessWidget {
       height: 54,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            primary: BUTTON_BLUE,
-            onPrimary: BUTTON_WHITE,
+            backgroundColor: BUTTON_BLUE,
+            foregroundColor: BUTTON_WHITE,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             )),
@@ -57,8 +57,8 @@ class SecondButton extends StatelessWidget {
       height: 54,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            primary: Colors.white,
-            onPrimary: BUTTON_BLUE,
+            backgroundColor: Colors.white,
+            foregroundColor: BUTTON_BLUE,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999),
               side: BorderSide(

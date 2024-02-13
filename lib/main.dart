@@ -18,7 +18,7 @@ void main() async {
         fontFamily: 'SQUAREAIR'
       ),
 
-      home: InformationScreen(),
+      home: LoginScreen(),
     ),
   );
 }
