@@ -12,5 +12,10 @@ class AddressController extends GetxController {
     placeAddress.value = address;
     latitude.value = lat;
     longitude.value = lng;
+    update();
+  }
+  void savePlace(String nickname) {
+    // TODO: 여기에 실제 저장 로직 구현
+    print(nickname);
   }
 }

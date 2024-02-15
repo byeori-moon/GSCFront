@@ -48,6 +48,7 @@ dependencies:
   url_launcher: ^6.2.4
   webview_flutter: ^4.5.0
   youtube_player_flutter: ^8.1.2
+  location: ^5.0.3
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,12 @@ flutter:
     - family: OHSQUAREAIR
       fonts:
         - asset: asset/font/Cafe24OhsquareAir-v2.0.ttf
+    - family: INTERREG
+      fonts:
+        - asset: asset/font/Inter-Regular.ttf
+    - family: INTERBOLD
+      fonts:
+        - asset: asset/font/Inter-Bold.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
