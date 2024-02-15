@@ -14,7 +14,7 @@ class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
   final AddressController addressController = Get.put(AddressController());
   final TextEditingController _controller = TextEditingController();
   final Dio _dio = Dio();
-  final String _apiKey = '';
+  final String _apiKey = 'AIzaSyDvknbRB4ohfTWz-R3aEDBAePlsOfIpkP0';
   List<dynamic> _autocompletePlaces = [];
   GoogleMapController? _mapController;
   LatLng? _selectedPosition;

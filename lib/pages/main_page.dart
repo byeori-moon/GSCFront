@@ -1,7 +1,7 @@
 import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/pages/camera.dart';
-import 'package:camera_pj/pages/map_page.dart';
+import 'package:camera_pj/pages/map_screen.dart';
 import 'package:camera_pj/screen/search_place_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';

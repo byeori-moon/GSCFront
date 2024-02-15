@@ -5,7 +5,31 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../component/sign_in_component.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool isSigningIn = false;
+  void handleSignIn() async {
+    if (isSigningIn) return;
+
+    setState(() {
+      isSigningIn = true;
+    });
+
+    final user = await signInWithGoogle();
+
+    if (!mounted) return;
+
+    setState(() {
+      isSigningIn = false;
+    });
+
+    checkUserInfoAndNavigate(user);
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,24 +45,11 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     _GoogleButton(
                       name: '구글 계정으로 로그인하기',
-                      onPressed: () {
-                        signInWithGoogle().then((user) {
-                          if (user != null) {
-                            print("로그인 성공: ${user.displayName}");
-                          }
-                        });
-                      },
+                      onPressed: onGoogleSignInButtonPressed,
                     ),
                     _GoogleButton(
                       name: '구글 계정으로 회원가입하기',
-                      onPressed: () {
-                        signInWithGoogle().then((user) {
-                          if (user != null) {
-                            print("로그인 성공: ${user.displayName}");
-                            Get.to(SignInNameInput());
-                          }
-                        });
-                      },
+                      onPressed: (){Get.to(SignInNameInput());},
                     ),
                   ],
                 ),
