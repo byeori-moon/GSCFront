@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+
+import '../component/token_manager.dart';
 
 class FireHazard {
   final int id;
@@ -137,4 +140,28 @@ class ObjectController extends GetxController {
     objectInformationData = ObjectInformationData.fromJson(data);
 
   }
+  Future<void> getInformation() async {
+    final dio = Dio();
+    try {
+      final idToken = await TokenManager().getToken(); // 토큰 가져오기
+      if (idToken != null) {
+        final response = await dio.get(
+          'https://2cfd-119-202-37-52.ngrok-free.app/api/edu-contents/1/',
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $idToken',
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          print('edu-content 가져오기 성공: ${response.data}');
+        } else {
+          print('edu-content 가져오기 실패: ${response.data}');
+        }
+      }
+    } catch (e) {
+      print('edu-content 가져오기 요청 중 오류 발생: $e');
+    }
+  }
+
 }

@@ -1,39 +1,19 @@
 import 'package:camera_pj/component/sign_in_component.dart';
+import 'package:camera_pj/component/token_manager.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AccountController extends GetxController {
-  var _userName = ''.obs;
-  String _idToken = '';
-
-  String get userName => _userName.value;
-
-  set userName(String value) => _userName.value = value;
-
-  RxString get idTokenRxString => _idToken.obs;
-
-  String get idToken => _idToken;
-
-  set idToken(String value) {
-    _idToken = value;
-    update();
-  }
-
-  Future<void> signUpWithGoogle(User? user) async {
-    if (user == null) {
-      print("로그인 실패");
-      return;
-    }
-    idToken = (await user.getIdToken())!;
-    print(userName);
+  Future<void> signUpWithGoogle(String userName) async {
+    final String? idToken = await TokenManager().getToken();
     print(idToken);
 
     final dio = Dio();
     try {
       final response = await dio.post(
-        'https://2cfd-119-202-37-52.ngrok-free.app/users/signUp/',
+        'https://fire-61d9a.du.r.appspot.com/users/signUp/',
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $idToken',

@@ -1,4 +1,3 @@
-import 'dart:collection';
 
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/pages/camera.dart';
@@ -27,7 +26,7 @@ void main() async {
         fontFamily: 'OHSQUAREAIR'
       ),
 
-      home: HomeScreen(),
+      home: LoginScreen(),
     ),
   );
 }

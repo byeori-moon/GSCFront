@@ -107,8 +107,7 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          getInformation();
-                        },
+                          },
                         style: ElevatedButton.styleFrom(
                           shadowColor: SHADOW_BLUE,
                           foregroundColor: Colors.black.withOpacity(0.8),
