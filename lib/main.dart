@@ -1,5 +1,6 @@
 
 import 'package:camera_pj/constant/colors.dart';
+import 'package:camera_pj/controller/object_controller.dart';
 import 'package:camera_pj/pages/camera.dart';
 import 'package:camera_pj/pages/main_page.dart';
 import 'package:camera_pj/screen/map_screen.dart';
@@ -18,6 +19,7 @@ void main() async {
   await Firebase.initializeApp();
   Get.put(AccountController());
   Get.put(SpaceController());
+  Get.put(ObjectController());
 
   runApp(
     GetMaterialApp(

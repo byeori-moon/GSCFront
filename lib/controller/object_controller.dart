@@ -143,10 +143,10 @@ class ObjectController extends GetxController {
   Future<void> getInformation() async {
     final dio = Dio();
     try {
-      final idToken = await TokenManager().getToken(); // 토큰 가져오기
+      final idToken = await TokenManager().getToken();
       if (idToken != null) {
         final response = await dio.get(
-          'https://2cfd-119-202-37-52.ngrok-free.app/api/edu-contents/1/',
+          'https://pengy.dev/api/edu-contents/get-contents/1/',
           options: Options(headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $idToken',

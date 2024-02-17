@@ -9,6 +9,11 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import '../screen/home_screen.dart';
 
+void printLongString(String text) {
+  final pattern = RegExp('.{1,800}'); // 800자 단위로 나눔
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
+}
+
 Future<User?> signInWithGoogle() async {
   try {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -16,11 +21,6 @@ Future<User?> signInWithGoogle() async {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       final fcmToken = await FirebaseMessaging.instance.getToken();
-      if (googleAuth.idToken != null) {
-        await TokenManager().setToken(googleAuth.idToken!);
-        print(googleAuth.idToken);
-      }
-      print(googleAuth.idToken);
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -28,9 +28,14 @@ Future<User?> signInWithGoogle() async {
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
+      if (await TokenManager().getToken() == null) {
+        final idToken = await userCredential.user?.getIdToken(true);
+        await TokenManager().setToken(idToken!);
+        print(idToken);
+      }
 
-      if (fcmToken != null) {
-        await TokenManager().setToken(fcmToken);
+      if (TokenManager().getFcmToken() == null) {
+        await TokenManager().setFcmToken(fcmToken!);
       }
       return userCredential.user;
     }
@@ -46,14 +51,15 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
     return;
   }
 
-  final idToken = await TokenManager().getToken();
+  final String? idToken = await TokenManager().getToken();
   final fcmToken = await TokenManager().getFcmToken();
 
   final dio = Dio();
+  dio.interceptors.add(CustomInterceptor());
 
   try {
     final response = await dio.post(
-      'https://fire-61d9a.du.r.appspot.com/users/signIn/',
+      'https://03cc-119-202-37-52.ngrok-free.app/users/signIn/',
       options: Options(headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $idToken',
