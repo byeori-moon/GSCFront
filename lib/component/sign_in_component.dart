@@ -27,12 +27,10 @@ Future<User?> signInWithGoogle() async {
       );
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+      final idToken = await userCredential.user?.getIdToken(true);
+      await TokenManager().setToken(idToken!);
+      print(idToken);
 
-      if (await TokenManager().getToken() == null) {
-        final idToken = await userCredential.user?.getIdToken(true);
-        await TokenManager().setToken(idToken!);
-        print(idToken);
-      }
 
       if (TokenManager().getFcmToken() == null) {
         await TokenManager().setFcmToken(fcmToken!);
@@ -59,7 +57,7 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
 
   try {
     final response = await dio.post(
-      'https://03cc-119-202-37-52.ngrok-free.app/users/signIn/',
+      'https://pengy.dev/users/signIn/',
       options: Options(headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $idToken',

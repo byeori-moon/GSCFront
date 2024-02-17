@@ -30,7 +30,7 @@ class AccountController extends GetxController {
       dio.interceptors.add(CustomInterceptor());
 
       final response = await dio.post(
-        'https://03cc-119-202-37-52.ngrok-free.app/users/signUp/',
+        'https://pengy.dev/users/signUp/',
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $idToken',
