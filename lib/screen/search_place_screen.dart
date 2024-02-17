@@ -222,7 +222,7 @@ class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
                     children: [
                       Icon(
                         Icons.check,
-                        size: 20,
+                          size: 20,
                       ),
                       SizedBox(
                         width: 4,

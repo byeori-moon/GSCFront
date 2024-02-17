@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:camera_pj/component/token_manager.dart';
+import 'package:camera_pj/controller/account_controller.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -131,4 +134,40 @@ class ScanController extends GetxController {
       return null;
     }
   }
+
+  void saveObject() async {
+    // TODO: 여기에 실제 저장 로직 구현
+
+    final dio = Dio(BaseOptions(
+      followRedirects: true,
+      maxRedirects: 5, // 최대 리디렉션 횟수
+    ));
+    final String? idToken = await TokenManager().getToken();
+    try {
+      dio.interceptors.add(CustomInterceptor());
+
+      final response = await dio.post(
+          'http://pengy.dev/api/spaces/hazards/',
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $idToken',
+          }),
+          data:{
+            "my_space": 1,
+            "fire_hazard": 4,
+            "thumbnail_image": "path/to/thumbnail.jpg",
+            "nickname": "WhilteRefrigerator"
+          }
+      );
+      if (response.statusCode == 200) {
+        print('물체등록 성공: ${response.data}');
+      } else {
+        print('물체등록 실패: ${response.data}');
+      }
+    } catch (e) {
+      print('물체등록 요청 중 오류 발생: $e');
+    }
+
+  }
+
 }

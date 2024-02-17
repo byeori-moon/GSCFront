@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       name: '구글 계정으로 회원가입하기',
                       onPressed: () {
                         signInWithGoogle().then((user) {
+                          print(user);
                           Get.to(SignInNameInput());
                         });
                       },

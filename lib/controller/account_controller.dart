@@ -23,20 +23,20 @@ void printLongString(String text) {
 class AccountController extends GetxController {
   Future<void> signUpWithGoogle(String userName) async {
     final String? idToken = await TokenManager().getToken();
-    print(idToken);
+    print("token:$idToken");
 
     final dio = Dio();
     try {
       dio.interceptors.add(CustomInterceptor());
 
       final response = await dio.post(
-        'https://03cc-119-202-37-52.ngrok-free.app/users/signUp/',
+        'http://pengy.dev/users/signUp/',
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $idToken',
         }),
         data: {
-          'name': '벼리',
+          'name': '준형',
         },
       );
 
