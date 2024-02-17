@@ -1,7 +1,7 @@
 import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
-import 'package:camera_pj/pages/camera.dart';
-import 'package:camera_pj/screen/map_screen.dart';
+import 'package:camera_pj/pages/map_page.dart';
+import 'package:camera_pj/screen/camera_screen.dart';
 import 'package:camera_pj/screen/search_place_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -72,12 +72,12 @@ class MainPage extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.to(CameraApp());
+                        Get.to(CameraView());
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: SHADOW_BLUE,
-                        foregroundColor: Colors.black.withOpacity(0.8),
-                        backgroundColor: MAINSCREEN_COLOR,
+                        onPrimary: Colors.black.withOpacity(0.8),
+                        primary: MAINSCREEN_COLOR,
                         elevation: 3,
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
@@ -90,8 +90,8 @@ class MainPage extends StatelessWidget {
                         children: [
                           Image.asset(
                             'asset/img/camera_penguin.png',
-                            height: 50,
-                            width: 50,
+                            height: 40,
+                            width: 40,
                           ),
                           SizedBox(width: 14,),
                           Text(
@@ -111,12 +111,12 @@ class MainPage extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.to(CameraApp());
+                        Get.to(CameraView());
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: SHADOW_BLUE,
-                        foregroundColor: Colors.black.withOpacity(0.8),
-                        backgroundColor: MAINSCREEN_COLOR,
+                        onPrimary: Colors.black.withOpacity(0.8),
+                        primary: MAINSCREEN_COLOR,
                         elevation: 3,
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
@@ -129,8 +129,8 @@ class MainPage extends StatelessWidget {
                         children: [
                           Image.asset(
                             'asset/img/flag_penguin.png',
-                            height: 50,
-                            width: 50,
+                            height: 40,
+                            width: 40,
                           ),
                           SizedBox(width: 14,),
                           Text(

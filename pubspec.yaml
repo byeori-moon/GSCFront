@@ -34,8 +34,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   permission_handler: ^11.2.0
-  camerax: ^0.1.2
-  camera2: ^0.10.5+73
   video_player: ^2.1.12
   google_maps_flutter: ^2.5.3
   geolocator: ^10.1.0
@@ -45,12 +43,8 @@ dependencies:
   google_sign_in: ^6.2.1
   firebase_core: ^2.25.4
   firebase_auth: ^4.17.4
-  url_launcher: ^6.2.4
-  webview_flutter: ^4.5.0
-  youtube_player_flutter: ^8.1.2
-  location: ^5.0.3
-  flutter_secure_storage: ^9.0.0
-  firebase_messaging: ^14.7.15
+  camera: ^0.10.5+9
+  flutter_vision: ^1.1.4
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +55,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -69,6 +63,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
+    - asset/
     - asset/img/
   fonts:
     - family: OHSQUARE
@@ -77,12 +72,6 @@ flutter:
     - family: OHSQUAREAIR
       fonts:
         - asset: asset/font/Cafe24OhsquareAir-v2.0.ttf
-    - family: INTERREG
-      fonts:
-        - asset: asset/font/Inter-Regular.ttf
-    - family: INTERBOLD
-      fonts:
-        - asset: asset/font/Inter-Bold.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
