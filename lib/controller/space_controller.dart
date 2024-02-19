@@ -59,6 +59,17 @@ class SpaceController extends GetxController {
   var currentCategory = SpaceCategoryType.all.obs;
   var spaces = <Space>[].obs;
 
+  List<List<dynamic>> extractTagsAndIds(List<Space> spaces) {
+    List<List<dynamic>> tagsAndIds = [];
+    for (Space space in spaces) {
+      // Space 객체에서 tag와 id 추출하여 배열에 추가
+      String tag = space.spaceName;
+      int id = space.id;
+      tagsAndIds.add([tag, id]);
+    }
+    return tagsAndIds;
+  }
+
   Future<List<Space>> fetchMySpaces() async {
     var dio = Dio();
     final idToken = await TokenManager().getToken();
@@ -75,7 +86,7 @@ class SpaceController extends GetxController {
       var fetchedSpaces =
           spacesJson.map((json) => Space.fromJson(json)).toList();
       spaces.assignAll(fetchedSpaces);
-      print("spc: $spacesJson");
+      print("spc: ${spaces[0].id}");
       return spacesJson.map((json) => Space.fromJson(json)).toList();
     } else {
       print("error");

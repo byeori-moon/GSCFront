@@ -89,7 +89,15 @@ class SaveMyPlaceScreen extends StatelessWidget {
                     String address= "${addressController.longitude.value}, ${addressController.latitude.value}";
                     String place = addressController.placeAddress.value;
                     if (nickname.isNotEmpty && selectedTag!.isNotEmpty) {
-                      addressController.savePlace(nickname, address, place,selectedTag!);
+                      var tagIndex = 4;
+                      if(selectedTag=='Cafe'){
+                        tagIndex = 2;
+                      }else if(selectedTag =='School'){
+                        tagIndex = 3;
+                      }else if(selectedTag=='Home'){
+                        tagIndex = 4;
+                      }
+                      addressController.savePlace(nickname, address, place,tagIndex);
                     } else {
                       Get.snackbar('Error', '이름과 태그를 입력해주세요');
                     }

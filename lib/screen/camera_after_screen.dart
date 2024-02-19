@@ -3,9 +3,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:camera_pj/controller/scan_controller.dart';
+import 'package:camera_pj/controller/space_controller.dart';
 import 'package:camera_pj/screen/information_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../component/token_manager.dart';
 
@@ -32,7 +36,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     double rleft = result["box"][0];
     double rtop = result["box"][1];
     double rright = result["box"][2];
-    double rbottom= result["box"][3];
+    double rbottom = result["box"][3];
 
     return Positioned(
       left: left,
@@ -68,7 +72,7 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     required this.imageHeight,
   });
 
-  void saveObject() async {
+  void saveObject(int space,int hazard,var path,String name) async {
     // TODO: 여기에 실제 저장 로직 구현
 
     final dio = Dio(BaseOptions(
@@ -78,32 +82,38 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     final String? idToken = await TokenManager().getToken();
     try {
       final response = await dio.post(
-          'https://pengy.dev/api/spaces/hazards/',
-          options: Options(headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $idToken',
-          }),
-          data:{
-            "my_space": 6,
-            "fire_hazard": 1,
-            "thumbnail_image": "path/to/thumbnail.jpg",
-            "nickname": "WhilteRefrigerator"
-          }
+        'https://pengy.dev/api/spaces/hazards/',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        }),
+        data: {
+          "my_space": space,
+          "fire_hazard": hazard,
+          "thumbnail_image": "path/to/thumbnail.jpg",
+          "nickname": name
+        },
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print('물체등록 성공: ${response.data}');
+
+        Get.to(InformationScreen(objectId: "$hazard"));
+
       } else {
         print('물체등록 실패: ${response.data}');
       }
     } catch (e) {
       print('물체등록 요청 중 오류 발생: $e');
     }
-
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
 
     return Scaffold(
       body: Center(
@@ -149,54 +159,106 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     int cropHeight = (bottom - top).toInt();
 
     // 이미지 자르기
-    File croppedImage = await cropImage(File(imagePath), cropLeft, cropTop, cropWidth, cropHeight);
+    File croppedImage = await cropImage(
+        File(imagePath), cropLeft, cropTop, cropWidth, cropHeight);
 
-    // 모달에서 자른 이미지 보여주기
+    String? objectName = null;
+    final spaceController = Get.find<SpaceController>(); // 가정한 ScanController 가져오기
+    int selectedTag = spaceController.spaces[0].id; // 선택된 태그를 저장하는 변수
+
     showModalBottomSheet(
+
       context: context,
-      backgroundColor: Colors.transparent, // 배경색을 투명으로 설정
+      backgroundColor: Colors.white.withOpacity(0.5),
       builder: (BuildContext context) {
-        return Center( // Center 위젯을 사용하여 모달을 화면 중앙에 배치
+        return Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.8, // 화면 너비의 80% 크기로 설정
-            height: MediaQuery.of(context).size.height * 0.8, // 화면 높이의 80% 크기로 설정
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.8,
+            padding: EdgeInsets.all(20.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // 컬럼의 크기를 최소로 설정하여 내용에 맞게 크기 조정
+              mainAxisSize: MainAxisSize.min,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: '이름',
+                          hintText: '이름을 입력하세요',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          objectName = value;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 10), // 간격 조절
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        decoration: InputDecoration(
+                          labelText: '태그 선택',
+                          labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        value: selectedTag,
+                        items: spaceController.spaces.map((space) {
+                          return DropdownMenuItem<int>(
+                            child: Text(space.spaceName),
+                            value: space.id,
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          // 선택된 태그 업데이트
+                          selectedTag = newValue!;
+                        },
+                      ),
+                    ),
+
+                  ],
+                ),
+                // 태그 표시
+                SizedBox(height: 10),
+
                 ClipOval(
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6, // 이미지의 가로 크기를 화면 너비의 60%로 설정
-                    height: MediaQuery.of(context).size.width * 0.6, // 이미지의 세로 크기를 화면 너비의 60%로 설정
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.width * 0.5,
                     child: Image.file(
                       croppedImage,
                       fit: BoxFit.cover,
-                      scale: 5.0, // 이미지가 모달 창 전체를 채우도록 설정
+                      scale: 5.0,
                     ),
                   ),
                 ),
-                SizedBox(height: 20), // 버튼과 이미지 사이에 여백 추가
+                // 이름 입력란
+
+                SizedBox(height: 20),
+                // 예/아니오 버튼
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center, // 버튼을 중앙 정렬
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        print(croppedImage);
-                        saveObject();
-                        // 여기에 예 버튼 동작을 처리하세요
-                        // Navigator.pop(context); // 모달 닫기
-                        // 페이지 이동 코드 추가
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => InformationScreen(objectId: '1',)), // 이동할 페이지 지정
-                        // );
+                        // 예를 누르면 정보를 저장하고 화면 이동
+                        print(objectName);
+                        print(selectedTag);
+                        if(objectName!.isNotEmpty){
+                          saveObject(selectedTag,3,croppedImage,objectName!);
+                        }
+
+                        // saveObjectAndNavigate(objectName, objectTag);
                       },
                       child: Text('예'),
                     ),
-                    SizedBox(width: 20), // 버튼 사이에 간격 추가
+                    SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // 여기에 아니요 버튼 동작을 처리하세요
-                        Navigator.pop(context); // 모달 닫기
+                        // 아니요를 누르면 모달 닫기
+                        Navigator.pop(context);
                       },
                       child: Text('아니요'),
                     ),
@@ -208,12 +270,10 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
         );
       },
     );
-
-
   }
 
-
-  Future<File> cropImage(File imageFile, int left, int top, int width, int height) async {
+  Future<File> cropImage(
+      File imageFile, int left, int top, int width, int height) async {
     // Read the image
     Uint8List imageBytes = await imageFile.readAsBytes();
 
@@ -224,15 +284,23 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
     final paint = Paint()..isAntiAlias = true;
-    canvas.drawImageRect(originalImage, Rect.fromLTRB(left.toDouble(), top.toDouble(), (left + width).toDouble(), (top + height).toDouble()), Rect.fromLTRB(0, 0, width.toDouble(), height.toDouble()), paint);
+    canvas.drawImageRect(
+        originalImage,
+        Rect.fromLTRB(left.toDouble(), top.toDouble(),
+            (left + width).toDouble(), (top + height).toDouble()),
+        Rect.fromLTRB(0, 0, width.toDouble(), height.toDouble()),
+        paint);
     final croppedImage = await recorder.endRecording().toImage(width, height);
 
     // Save the cropped image to file
-    final croppedByteData = await croppedImage.toByteData(format: ui.ImageByteFormat.png);
+    final croppedByteData = await croppedImage.toByteData(
+        format: ui.ImageByteFormat.png);
     List<int> croppedBytes = croppedByteData!.buffer.asUint8List();
-    File croppedFile = File('${imageFile.path}_cropped.png');
+    File croppedFile =
+    File('${imageFile.path}_cropped.png');
     await croppedFile.writeAsBytes(croppedBytes);
 
     return croppedFile;
   }
+
 }

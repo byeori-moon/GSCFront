@@ -23,7 +23,7 @@ class AddressController extends GetxController {
     update();
   }
 
-  void savePlace(String nickname, String coordinates,String address,String category) async {
+  void savePlace(String nickname, String coordinates,String address,int category) async {
     // TODO: 여기에 실제 저장 로직 구현
     print(address);
     print(coordinates);
@@ -34,28 +34,29 @@ class AddressController extends GetxController {
     ));
 
 
-
-
-
     try {
     final idToken = await TokenManager().getToken();
+
+
+
+    // FormData 생성
     print(idToken);
 
     if (idToken != null) {
         final response = await dio.post(
-          'https://pengy.dev/api/spaces/myspace/',
+          'http://pengy.dev/api/spaces/myspace/create',
           options: Options(headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $idToken',
           }),
           data: {
-            "category": "Cafe",
-            "spaceName": "cafe",
-            "coordinates": "126.9996417, 37.56100278",
-            "address": "서울시 동작구 상도동"
+            'category': category,
+            'spaceName': nickname,
+            'coordinates': coordinates,
+            'address': address
           },
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200||response.statusCode==201) {
         print('장소등록 성공: ${response.data}');
       } else {
         print('장소등록 실패: ${response.data}');
