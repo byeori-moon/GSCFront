@@ -10,35 +10,48 @@ import '../controller/space_object_controller.dart';
 class SpaceDetailScreen extends StatelessWidget {
   final Space space;
   SpaceDetailScreen({Key? key, required this.space}) : super(key: key);
-  final SpaceObjectController controller = Get.put(SpaceObjectController());
+  final SpaceObjectController spaceObjectController = Get.put(SpaceObjectController());
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: BACKGROUND_COLOR,
       appBar: AppBar(
         title: Text(space.spaceName),
         backgroundColor: BACKGROUND_COLOR,
       ),
-      body: Obx(() => GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1,
+      body: Obx(() => Container(
+        child: FutureBuilder<List<SpaceDetail>>(
+            future: spaceObjectController.fetchSpaceObjects(space.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1,
+              ),
+              itemCount: spaceObjectController.spaceDetails.length,
+              itemBuilder: (context, index) {
+                SpaceDetail spaceDetail = spaceObjectController.spaceDetails[index];
+                return Card(
+                  color: DEFAULT_YELLOW,
+                  margin: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Image.network(spaceDetail.thumbnailImage),
+                      Text(spaceDetail.nickname),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
         ),
-        itemCount: controller.spaceDetails.length,
-        itemBuilder: (context, index) {
-          SpaceDetail spaceDetail = controller.spaceDetails[index];
-          return Card(
-            color: DEFAULT_YELLOW,
-            margin: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Image.network(spaceDetail.thumbnailImage),
-                Text(spaceDetail.nickname),
-              ],
-            ),
-          );
-        },
       )),
     );
   }
