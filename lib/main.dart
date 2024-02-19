@@ -27,7 +27,7 @@ void main() async {
         fontFamily: 'OHSQUAREAIR'
       ),
 
-      home: MainPage(),
+      home: LoginScreen(),
     ),
   );
 }

@@ -1,5 +1,6 @@
 import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
+import 'package:camera_pj/screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,7 +57,7 @@ class _SignInNameInputState extends State<SignInNameInput> {
                     child: DefaultButton(
                       buttonText: '다음으로',
                       onPressed: () async {
-                        accountController.signUpWithGoogle(_controller.text);
+                        accountController.signUpWithGoogle(_controller.text).then((value) => Get.to(HomeScreen()));
                       },
                     ),
                   ),

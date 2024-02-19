@@ -88,13 +88,7 @@ class HomeScreen extends StatelessWidget {
                       width: 6,
                     ),
                   ),
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const MapScreen()),
-                    ),
-                    child: MapScreen(),
-                  ),
+                  child: MapScreen(),
                 ),
               ),
             ),

@@ -62,6 +62,7 @@ class SpaceController extends GetxController {
   Future<List<Space>> fetchMySpaces() async {
     var dio = Dio();
     final idToken = await TokenManager().getToken();
+    print('fetchData');
     final response = await dio.get(
       'https://pengy.dev/api/spaces/myspace',
       options: Options(headers: {
@@ -81,9 +82,11 @@ class SpaceController extends GetxController {
     }
   }
 
-  Set<Marker> getMarkers(BuildContext context) {
+  Set<Marker> getMarkers(BuildContext context)  {
+
     return spaces.map((space) {
       var coords = space.coordinates.split(', ').map(double.parse).toList();
+      print(coords);
       return Marker(
         markerId: MarkerId('${space.id}'),
         position: LatLng(coords[0], coords[1]),
