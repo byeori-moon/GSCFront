@@ -9,7 +9,7 @@ import '../component/sign_in_component.dart';
 import '../controller/account_controller.dart';
 
 class SignInNameInput extends StatefulWidget {
-  const SignInNameInput({super.key});
+  const SignInNameInput({Key? key});
 
   @override
   State<SignInNameInput> createState() => _SignInNameInputState();
@@ -43,7 +43,14 @@ class _SignInNameInputState extends State<SignInNameInput> {
                   SizedBox(
                     height: 12,
                   ),
-                  InputComponent(hintText: '이름', onSubmitted: (value) { _controller.text=value;}),
+                  TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      labelText: '이름',
+                      labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ],
               ),
               Row(
@@ -56,6 +63,8 @@ class _SignInNameInputState extends State<SignInNameInput> {
                     child: DefaultButton(
                       buttonText: '다음으로',
                       onPressed: () async {
+                        print("ct: ${_controller.text}");
+                        // 여기서 _controller.text를 사용합니다.
                         accountController.signUpWithGoogle(_controller.text);
                       },
                     ),

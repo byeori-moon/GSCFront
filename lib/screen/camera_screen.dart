@@ -15,7 +15,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     ) {
   if (yoloResults.isEmpty) return [];
 
-  double factorX = screen.width / imageWidth;
+  double factorX = screen.width / imageWidth / 2;
   double factorY = screen.height / imageHeight / 2;
 
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);

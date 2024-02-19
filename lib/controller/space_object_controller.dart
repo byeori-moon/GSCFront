@@ -48,8 +48,10 @@ class SpaceObjectController extends GetxController {
           'Authorization': 'Bearer $idToken',
         }),);
       if (response.statusCode == 200) {
+        print("11:${response.data}");
         var fetchedObjects = List<SpaceDetail>.from(response.data.map((json) => SpaceDetail.fromJson(json)));
         spaceDetails = fetchedObjects;
+        print(spaceDetails);
       } else {
         print('Failed to load space objects');
       }

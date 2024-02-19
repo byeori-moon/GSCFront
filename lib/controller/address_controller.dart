@@ -33,25 +33,27 @@ class AddressController extends GetxController {
       maxRedirects: 1, // 최대 리디렉션 횟수
     ));
 
-    Map<String, dynamic> jsonData = {
-      "category": 2,
-      "spaceName": "cafe",
-      "coordinates": "126.9996417, 37.56100278",
-      "address": "서울시 동작구 상도동"
-    };
-    ;
+
+
+
 
     try {
     final idToken = await TokenManager().getToken();
+    print(idToken);
 
     if (idToken != null) {
-        print(idToken);
         final response = await dio.post(
           'https://pengy.dev/api/spaces/myspace/',
           options: Options(headers: {
+            'Content-Type': 'application/json',
             'Authorization': 'Bearer $idToken',
           }),
-          data:jsonData,
+          data: {
+            "category": "Cafe",
+            "spaceName": "cafe",
+            "coordinates": "126.9996417, 37.56100278",
+            "address": "서울시 동작구 상도동"
+          },
       );
       if (response.statusCode == 200) {
         print('장소등록 성공: ${response.data}');

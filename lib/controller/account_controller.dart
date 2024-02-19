@@ -24,11 +24,11 @@ class AccountController extends GetxController {
   Future<void> signUpWithGoogle(String userName) async {
     final String? idToken = await TokenManager().getToken();
     print(idToken);
+    print(userName);
 
     final dio = Dio();
     try {
       dio.interceptors.add(CustomInterceptor());
-
       final response = await dio.post(
         'https://pengy.dev/users/signUp/',
         options: Options(headers: {
@@ -36,7 +36,7 @@ class AccountController extends GetxController {
           'Authorization': 'Bearer $idToken',
         }),
         data: {
-          'name': '벼리',
+          'name': '$userName',
         },
       );
 
