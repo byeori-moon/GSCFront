@@ -4,7 +4,10 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:camera_pj/screen/information_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../component/token_manager.dart';
 
 List<Widget> displayBoxesAroundRecognizedObjects(
     Image image,
@@ -64,6 +67,39 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     required this.imageWidth,
     required this.imageHeight,
   });
+
+  void saveObject() async {
+    // TODO: 여기에 실제 저장 로직 구현
+
+    final dio = Dio(BaseOptions(
+      followRedirects: true,
+      maxRedirects: 5, // 최대 리디렉션 횟수
+    ));
+    final String? idToken = await TokenManager().getToken();
+    try {
+      final response = await dio.post(
+          'https://pengy.dev/api/spaces/hazards/',
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $idToken',
+          }),
+          data:{
+            "my_space": 6,
+            "fire_hazard": 1,
+            "thumbnail_image": "path/to/thumbnail.jpg",
+            "nickname": "WhilteRefrigerator"
+          }
+      );
+      if (response.statusCode == 200) {
+        print('물체등록 성공: ${response.data}');
+      } else {
+        print('물체등록 실패: ${response.data}');
+      }
+    } catch (e) {
+      print('물체등록 요청 중 오류 발생: $e');
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,12 +181,13 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         print(croppedImage);
+                        saveObject();
                         // 여기에 예 버튼 동작을 처리하세요
-                        Navigator.pop(context); // 모달 닫기
+                        // Navigator.pop(context); // 모달 닫기
                         // 페이지 이동 코드 추가
                         // Navigator.push(
                         //   context,
-                        //   MaterialPageRoute(builder: (context) => InformationScreen()), // 이동할 페이지 지정
+                        //   MaterialPageRoute(builder: (context) => InformationScreen(objectId: '1',)), // 이동할 페이지 지정
                         // );
                       },
                       child: Text('예'),
