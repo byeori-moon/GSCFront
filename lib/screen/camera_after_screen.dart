@@ -3,7 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:camera_pj/screen/information_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import '../component/token_manager.dart';
 
 List<Widget> displayBoxesAroundRecognizedObjects(
     Image image,
@@ -64,6 +68,39 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     required this.imageHeight,
   });
 
+  void saveObject() async {
+    // TODO: 여기에 실제 저장 로직 구현
+
+    final dio = Dio(BaseOptions(
+      followRedirects: true,
+      maxRedirects: 5, // 최대 리디렉션 횟수
+    ));
+    final String? idToken = await TokenManager().getToken();
+    try {
+      final response = await dio.post(
+          'https://pengy.dev/api/spaces/hazards/',
+          options: Options(headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $idToken',
+          }),
+          data:{
+            "my_space": 6,
+            "fire_hazard": 1,
+            "thumbnail_image": "path/to/thumbnail.jpg",
+            "nickname": "WhilteRefrigerator"
+          }
+      );
+      if (response.statusCode == 200) {
+        print('물체등록 성공: ${response.data}');
+      } else {
+        print('물체등록 실패: ${response.data}');
+      }
+    } catch (e) {
+      print('물체등록 요청 중 오류 발생: $e');
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -105,32 +142,76 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       String imagePath,
       BuildContext context,
       ) async {
-    // Calculate crop region
+    // 자르기 영역 계산
     int cropLeft = left.toInt();
     int cropTop = top.toInt();
     int cropWidth = (right - left).toInt();
     int cropHeight = (bottom - top).toInt();
 
-    // Crop the image
+    // 이미지 자르기
     File croppedImage = await cropImage(File(imagePath), cropLeft, cropTop, cropWidth, cropHeight);
 
-    // Show the cropped image in modal
+    // 모달에서 자른 이미지 보여주기
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.transparent, // 배경색을 투명으로 설정
       builder: (BuildContext context) {
-        return Container(
-          width: double.infinity, // 모달 창의 가로폭을 화면 전체로 설정
-          height: double.infinity, // 모달 창의 세로높이를 화면 전체로 설정
-          child: Image.file(
-            croppedImage,
-            fit: BoxFit.cover,
-            scale: 5.0,// 이미지가 모달 창 전체를 채우도록 설정
+        return Center( // Center 위젯을 사용하여 모달을 화면 중앙에 배치
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8, // 화면 너비의 80% 크기로 설정
+            height: MediaQuery.of(context).size.height * 0.8, // 화면 높이의 80% 크기로 설정
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // 컬럼의 크기를 최소로 설정하여 내용에 맞게 크기 조정
+              children: [
+                ClipOval(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6, // 이미지의 가로 크기를 화면 너비의 60%로 설정
+                    height: MediaQuery.of(context).size.width * 0.6, // 이미지의 세로 크기를 화면 너비의 60%로 설정
+                    child: Image.file(
+                      croppedImage,
+                      fit: BoxFit.cover,
+                      scale: 5.0, // 이미지가 모달 창 전체를 채우도록 설정
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20), // 버튼과 이미지 사이에 여백 추가
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // 버튼을 중앙 정렬
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        print(croppedImage);
+                        saveObject();
+                        // 여기에 예 버튼 동작을 처리하세요
+                        // Navigator.pop(context); // 모달 닫기
+                        // 페이지 이동 코드 추가
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => InformationScreen(objectId: '1',)), // 이동할 페이지 지정
+                        // );
+                      },
+                      child: Text('예'),
+                    ),
+                    SizedBox(width: 20), // 버튼 사이에 간격 추가
+                    ElevatedButton(
+                      onPressed: () {
+                        // 여기에 아니요 버튼 동작을 처리하세요
+                        Navigator.pop(context); // 모달 닫기
+                      },
+                      child: Text('아니요'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
     );
 
+
   }
+
 
   Future<File> cropImage(File imageFile, int left, int top, int width, int height) async {
     // Read the image

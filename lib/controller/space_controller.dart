@@ -63,7 +63,7 @@ class SpaceController extends GetxController {
     var dio = Dio();
     final idToken = await TokenManager().getToken();
     final response = await dio.get(
-      'https://pengy.dev/api/spaces/myspace',
+      'https://pengy.dev/api/spaces/myspace/',
       options: Options(headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $idToken',
@@ -75,13 +75,16 @@ class SpaceController extends GetxController {
       var fetchedSpaces =
           spacesJson.map((json) => Space.fromJson(json)).toList();
       spaces.assignAll(fetchedSpaces);
+      print("spc: $spacesJson");
       return spacesJson.map((json) => Space.fromJson(json)).toList();
     } else {
+      print("error");
       throw Exception('Failed to load my spaces');
     }
   }
 
   Set<Marker> getMarkers(BuildContext context) {
+    fetchMySpaces();
     return spaces.map((space) {
       var coords = space.coordinates.split(', ').map(double.parse).toList();
       return Marker(

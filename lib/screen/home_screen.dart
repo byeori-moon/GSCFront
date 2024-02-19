@@ -2,7 +2,7 @@ import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/account_controller.dart';
 import 'package:camera_pj/controller/object_controller.dart';
-import 'package:camera_pj/screen/information_screen.dart';
+import 'package:camera_pj/screen/camera_screen.dart';
 import 'package:camera_pj/screen/map_screen.dart';
 import 'package:camera_pj/screen/search_place_screen.dart';
 import 'package:dio/dio.dart';
@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import '../component/sign_in_component.dart';
+import '../controller/scan_controller.dart';
 import '../controller/space_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -109,8 +110,9 @@ class HomeScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Get.to(()=>InformationScreen(objectId: '1'));
-                          },
+                            Get.to(CameraView());
+
+                        },
                         style: ElevatedButton.styleFrom(
                           shadowColor: SHADOW_BLUE,
                           foregroundColor: Colors.black.withOpacity(0.8),

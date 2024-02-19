@@ -49,38 +49,16 @@ List<Widget> displayBoxesAroundRecognizedObjects(
   }).toList();
 }
 
-class CameraView extends StatefulWidget {
+class CameraView extends StatelessWidget {
   const CameraView({Key? key}) : super(key: key);
 
   @override
-  _CameraViewState createState() => _CameraViewState();
-}
-
-class _CameraViewState extends State<CameraView> {
-  late ScanController controller; // ScanController 인스턴스를 선언합니다.
-
-  @override
-  void initState() {
-    super.initState();
-    // ScanController를 등록합니다.
-    controller = Get.put(ScanController());
-  }
-
-  @override
-  void dispose() {
-    // ScanController를 삭제합니다.
-    Get.delete<ScanController>();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final ScanController controller = Get.put(ScanController()); // ScanController 초기화
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: GetBuilder<ScanController>(
-        // init 속성을 사용하지 않습니다.
         builder: (controller) {
           return controller.isCameraInitialized.value
               ? Stack(
@@ -131,7 +109,6 @@ class _CameraViewState extends State<CameraView> {
                     XFile? image = await controller.takePicture();
                     RxList<Map<String, dynamic>>? content =
                         controller.detectedObjects;
-                    // 사진을 찍은 후 다른 화면으로 이동합니다.
                     print("image: ${image?.path}");
                     print("content: $content");
                     if (image?.path != null) {
@@ -155,7 +132,7 @@ class _CameraViewState extends State<CameraView> {
                 ),
               ),
               ...displayBoxesAroundRecognizedObjects(
-                size,
+                MediaQuery.of(context).size,
                 controller.detectedObjects,
                 controller.imageWidth.value,
                 controller.imageHeight.value,

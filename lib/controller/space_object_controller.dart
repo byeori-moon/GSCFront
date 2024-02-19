@@ -1,3 +1,4 @@
+import 'package:camera_pj/component/token_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
@@ -40,7 +41,12 @@ class SpaceObjectController extends GetxController {
 
   Future<List<SpaceDetail>> fetchSpaceObjects(int spaceId) async {
     try {
-      final response = await dio.get('https://pengy.dev/api/spaces/myspace/$spaceId/');
+      final String? idToken = await TokenManager().getToken();
+      final response = await dio.get('https://pengy.dev/api/spaces/myspace/$spaceId/',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        }),);
       if (response.statusCode == 200) {
         var fetchedObjects = List<SpaceDetail>.from(response.data.map((json) => SpaceDetail.fromJson(json)));
         spaceDetails = fetchedObjects;
