@@ -63,10 +63,10 @@ class ScanController extends GetxController {
   initTFLite() async {
     await vision.loadYoloModel(
       labels: 'asset/labels2.txt',
-      modelPath: 'asset/yolov5n.tflite',
-      modelVersion: "yolov5",
+      modelPath: 'asset/yolov8n.tflite',
+      modelVersion: "yolov8",
       quantization: false,
-      numThreads: 1,
+      numThreads: 2,
       useGpu: false,
     );
   }
@@ -153,8 +153,8 @@ class ScanController extends GetxController {
             'Authorization': 'Bearer $idToken',
           }),
           data:{
-            "my_space": 1,
-            "fire_hazard": 4,
+            "my_space": 6,
+            "fire_hazard": 1,
             "thumbnail_image": "path/to/thumbnail.jpg",
             "nickname": "WhilteRefrigerator"
           }

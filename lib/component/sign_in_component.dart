@@ -50,6 +50,7 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
   }
 
   final String? idToken = await TokenManager().getToken();
+  print("gt: $idToken");
   final fcmToken = await TokenManager().getFcmToken();
 
   final dio = Dio();
@@ -69,7 +70,6 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
 
     if (response.statusCode == 200) {
       final responseBody = response.data;
-      print(response.data);
       Get.to(HomeScreen());
     } else if (response.statusCode == 404) {
       Get.to(SignInNameInput());
