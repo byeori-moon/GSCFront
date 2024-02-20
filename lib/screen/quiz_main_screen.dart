@@ -23,28 +23,103 @@ class QuizMainScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
-            return Column(
-              children: [
-                Text('현재 정어리 개수'),
-                Container(
-                  child: Row(
+            return Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 16, top: 40, bottom: 40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
                     children: [
-                      Image.asset('asset/img/fish.png'),
-                      Text('${snapshot.data}'),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          '현재 정어리 개수',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'OHSQUARE',
+                            color: BACKGROUND_COLOR,
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Container(
+                            height: 50,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Row(
+                              children: [
+                                Image.asset('asset/img/fish.png'),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  '${snapshot.data}',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'OHSQUARE',
+                                    color: BACKGROUND_COLOR,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ),
-                Image.asset(
-                    'asset/img/${snapshot.data! <= 10 ? 'small' : snapshot.data! <= 20 ? 'medium' : 'big'}_penguin.png'),
-                Text('화재 안전 퀴즈 풀기'),
-                ElevatedButton(
-                  onPressed: () async {
-                    await quizController.fetchQuizzes();
-                    Get.to(() => QuizSolveScreen(index: 0));
-                  },
-                  child: Text('퀴즈 풀기 시작하기'),
-                ),
-              ],
+                  Column(
+                    children: [
+                      Image.asset(
+                          'asset/img/${snapshot.data! <= 10 ? 'small' : snapshot.data! <= 20 ? 'medium' : 'big'}_penguin.png',fit: BoxFit.contain,),
+                      Text(
+                        '화재 안전 퀴즈 풀기',
+                        style: TextStyle(
+                          fontFamily: 'OHSQUARE',
+                          fontSize: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Expanded(child: SizedBox(),),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: BUTTON_BLUE,
+                            backgroundColor: Colors.white,
+                          ),
+                          onPressed: () async {
+                            await quizController.fetchQuizzes();
+                            quizController.quizAnswer=null;
+                            quizController.quizScore=0;
+                            Get.to(() => QuizSolveScreen(index: 0));
+                          },
+                          child: Text('퀴즈 풀기 시작하기',style: TextStyle(fontFamily: 'OHSQUARE'),),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
