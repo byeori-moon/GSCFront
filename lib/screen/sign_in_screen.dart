@@ -55,7 +55,7 @@ class _SignInNameInputState extends State<SignInNameInput> {
                   ),
                   Expanded(
                     child: DefaultButton(
-                      buttonText: '다음으로',
+                      buttonText: '회원가입 완료',
                       onPressed: () async {
                         accountController.signUpWithGoogle(_controller.text).then((value) => Get.to(HomeScreen()));
                       },
