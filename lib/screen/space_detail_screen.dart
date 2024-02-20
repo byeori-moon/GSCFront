@@ -37,7 +37,6 @@ class SpaceDetailScreen extends StatelessWidget {
               return Column(
                 children: [
                   Expanded(
-                    // GridView.builder를 Expanded로 감싼다.
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,

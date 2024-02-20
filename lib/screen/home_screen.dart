@@ -15,25 +15,36 @@ import '../component/sign_in_component.dart';
 import '../controller/space_controller.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final int? initialIndex;
+
+  const HomeScreen({Key? key, this.initialIndex}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
+  late int _selectedIndex;
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex ?? 0;
+  }
+
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
+
   final List<Widget> _widgetOptions = <Widget>[
     _HomeScreen(),
     MapScreen(),
     QuizMainScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,9 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BottomNavigationBar(
           onTap: _onItemTapped,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.house_outlined),label: 'home'),
-            BottomNavigationBarItem(icon: Icon(Icons.map_outlined),label: 'map'),
-            BottomNavigationBarItem(icon: Icon(Icons.contact_support),label: 'quiz'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.house_outlined), label: 'home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.map_outlined), label: 'map'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.contact_support), label: 'quiz'),
           ],
           selectedItemColor: BUTTON_BLUE,
           showUnselectedLabels: false,
@@ -58,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-
     );
   }
 
@@ -90,10 +103,8 @@ class _BottomBar extends StatefulWidget {
 }
 
 class _BottomBarState extends State<_BottomBar> {
-
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: 60.0,
       decoration: BoxDecoration(
@@ -136,6 +147,7 @@ class _BottomBarState extends State<_BottomBar> {
     );
   }
 }
+
 class _HomeScreen extends StatelessWidget {
   const _HomeScreen({super.key});
 
