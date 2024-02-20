@@ -99,13 +99,14 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('물체등록 성공: ${response.data}');
 
-        Get.to(InformationScreen(objectId: "$hazard"));
+        Get.to(InformationScreen(objectId: "$hazard", type: true));
 
       } else {
         print('물체등록 실패: ${response.data}');
       }
     } catch (e) {
       print(path);
+      Get.to(InformationScreen(objectId: "$hazard",type: true));
       print('물체등록 요청 중 오류 발생: $e');
     }
   }

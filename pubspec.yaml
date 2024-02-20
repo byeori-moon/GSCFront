@@ -82,6 +82,9 @@ flutter:
     - family: DONGDONG
       fonts:
         - asset: asset/font/Cafe24Dongdong-v2.0.ttf
+    - family: MAINT
+      fonts:
+        - asset: asset/font/BlackOpsOne-Regular.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

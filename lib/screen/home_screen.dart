@@ -83,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (permission == LocationPermission.deniedForever) {
       throw Exception("Location permission denied forever");
     }
-
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,

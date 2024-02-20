@@ -1,5 +1,6 @@
 import 'package:camera_pj/component/button_component.dart';
 import 'package:camera_pj/constant/colors.dart';
+import 'package:camera_pj/screen/information_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,21 +45,27 @@ class SpaceDetailScreen extends StatelessWidget {
                       ),
                       itemCount: spaceObjectController.spaceDetails.length,
                       itemBuilder: (context, index) {
-                        SpaceDetail spaceDetail =
-                            spaceObjectController.spaceDetails[index];
-                        return Card(
-                          color: DEFAULT_YELLOW,
-                          margin: EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.network(
-                                spaceDetail.thumbnailImage,
-                                fit: BoxFit.contain,
-                              ),
-                              Text(spaceDetail.nickname),
-                            ],
+                        SpaceDetail spaceDetail = spaceObjectController.spaceDetails[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // 클릭 이벤트 처리
+                            // 예: 상세 페이지로 이동
+                            Get.to(() => InformationScreen(objectId: '${spaceDetail.fireHazard}',type: false));
+                          },
+                          child: Card(
+                            color: DEFAULT_YELLOW,
+                            margin: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                  spaceDetail.thumbnailImage,
+                                  fit: BoxFit.contain,
+                                ),
+                                Text(spaceDetail.nickname),
+                              ],
+                            ),
                           ),
                         );
                       },

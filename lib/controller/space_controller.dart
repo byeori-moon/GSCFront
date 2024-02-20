@@ -31,16 +31,16 @@ class Space {
   factory Space.fromJson(Map<String, dynamic> json) {
     SpaceCategoryType spaceCategoryType;
     switch (json['category']) {
-      case "집":
+      case 4:
         spaceCategoryType = SpaceCategoryType.house;
         break;
-      case "직장":
+      case 3:
         spaceCategoryType = SpaceCategoryType.office;
         break;
-      case "카페":
+      case 2:
         spaceCategoryType = SpaceCategoryType.cafe;
         break;
-      default:
+        default:
         spaceCategoryType = SpaceCategoryType.etc;
         break;
     }
@@ -145,31 +145,41 @@ class SpaceController extends GetxController {
                     SizedBox(
                       width: 15,
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          space.spaceName,
-                          style: TextStyle(
-                            fontFamily: 'OHSQUARE',
-                            fontSize: 25,
-                            color: Color(0XFF272727),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            space.spaceName,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontFamily: 'OHSQUARE',
+                              fontSize: 25,
+                              color: Color(0XFF272727),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 7,
-                        ),
-                        Text(
-                          space.address,
-                          style: TextStyle(
-                            fontFamily: 'OHSQUAREAIR',
-                            fontSize: 16,
-                            color: Color(0XFF727272),
+                          SizedBox(
+                            height: 7,
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        )
-                      ],
+                          Text(
+                            space.address,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontFamily: 'OHSQUAREAIR',
+                              fontSize: 16,
+                              color: Color(0XFF727272),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -183,20 +193,18 @@ class SpaceController extends GetxController {
                 width: 160,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: BUTTON_BLUE,
-                      foregroundColor: BUTTON_WHITE,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(999),
-                      )),
+                    backgroundColor: BUTTON_BLUE,
+                    foregroundColor: BUTTON_WHITE,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.add,
                         size: 20,
-                      ),
-                      SizedBox(
-                        width: 4,
                       ),
                       Text(
                         '장소 상세보기',
@@ -218,6 +226,7 @@ class SpaceController extends GetxController {
       },
     );
   }
+
 
   void showMySpacesModal(BuildContext context) {
     showModalBottomSheet(

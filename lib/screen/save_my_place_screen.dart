@@ -68,7 +68,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                             ),
                           ),
                           value: selectedTag,
-                          items: ['Home', 'Cafe', 'School'] // 선택할 태그 목록
+                          items: ['Home', 'Cafe', 'Company'] // 선택할 태그 목록
                               .map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -92,7 +92,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                       var tagIndex = 4;
                       if(selectedTag=='Cafe'){
                         tagIndex = 2;
-                      }else if(selectedTag =='School'){
+                      }else if(selectedTag =='Company'){
                         tagIndex = 3;
                       }else if(selectedTag=='Home'){
                         tagIndex = 4;
