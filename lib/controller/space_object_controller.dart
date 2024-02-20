@@ -1,6 +1,8 @@
-import 'package:camera_pj/component/token_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+
+import '../component/token_manager.dart';
+import 'account_controller.dart';
 
 class SpaceDetail {
   final int id;
@@ -29,29 +31,31 @@ class SpaceDetail {
 }
 
 class SpaceObjectController extends GetxController {
-
-
   List<SpaceDetail> spaceDetails = <SpaceDetail>[].obs;
 
   @override
   void onInit() {
     super.onInit();
   }
+
   final Dio dio = Dio();
 
   Future<List<SpaceDetail>> fetchSpaceObjects(int spaceId) async {
     try {
-      final String? idToken = await TokenManager().getToken();
-      final response = await dio.get('https://pengy.dev/api/spaces/myspace/$spaceId/',
+      dio.interceptors.add(CustomInterceptor());
+      final idToken = await TokenManager().getToken();
+      final response = await dio.get(
+        'https://pengy.dev/api/spaces/myspace/$spaceId/',
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $idToken',
-        }),);
+        }),
+      );
+
       if (response.statusCode == 200) {
-        print("11:${response.data}");
-        var fetchedObjects = List<SpaceDetail>.from(response.data.map((json) => SpaceDetail.fromJson(json)));
+        var fetchedObjects = List<SpaceDetail>.from(
+            response.data.map((json) => SpaceDetail.fromJson(json)));
         spaceDetails = fetchedObjects;
-        print(spaceDetails);
       } else {
         print('Failed to load space objects');
       }
@@ -61,5 +65,4 @@ class SpaceObjectController extends GetxController {
     }
     return spaceDetails;
   }
-
 }

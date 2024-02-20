@@ -86,7 +86,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   DefaultButton(buttonText: '장소 저장하기', onPressed: () async {
                     String nickname = nicknameController.text;
-                    String address= "${addressController.longitude.value}, ${addressController.latitude.value}";
+                    String address= "${addressController.latitude.value}, ${addressController.longitude.value}";
                     String place = addressController.placeAddress.value;
                     if (nickname.isNotEmpty && selectedTag!.isNotEmpty) {
                       var tagIndex = 4;

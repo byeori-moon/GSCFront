@@ -8,7 +8,7 @@ import 'package:camera_pj/controller/space_controller.dart';
 import 'package:camera_pj/screen/information_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:get/get_core/src/get_main.dart';
 
 import '../component/token_manager.dart';
@@ -28,10 +28,10 @@ List<Widget> displayBoxesAroundRecognizedObjects(
 
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);
   return yoloResults.map((result) {
-    double left = result["box"][0] * factorX;
-    double top = result["box"][1] * factorY - 10;
-    double right = result["box"][2] * factorX + 25;
-    double bottom = result["box"][3] * factorY + 10;
+    double left = result["box"][0] * factorX -20;
+    double top = result["box"][1] * factorY - 20;
+    double right = result["box"][2] * factorX + 40;
+    double bottom = result["box"][3] * factorY + 40;
     double fontSize = (bottom - top); // 텍스트 길이가 박스 높이의 70%가 되도록 설정
     double rleft = result["box"][0];
     double rtop = result["box"][1];
@@ -79,20 +79,22 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       followRedirects: true,
       maxRedirects: 5, // 최대 리디렉션 횟수
     ));
+
     final String? idToken = await TokenManager().getToken();
     try {
+      FormData formData = FormData.fromMap({
+        'my_space': space,
+        'fire_hazard': hazard,
+        'thumbnail_image': await MultipartFile.fromFile(path),
+        'nickname': name,
+      });
       final response = await dio.post(
         'https://pengy.dev/api/spaces/hazards/',
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $idToken',
         }),
-        data: {
-          "my_space": space,
-          "fire_hazard": hazard,
-          "thumbnail_image": "path/to/thumbnail.jpg",
-          "nickname": name
-        },
+        data: formData,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('물체등록 성공: ${response.data}');
@@ -103,6 +105,7 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
         print('물체등록 실패: ${response.data}');
       }
     } catch (e) {
+      print(path);
       print('물체등록 요청 중 오류 발생: $e');
     }
   }
@@ -246,8 +249,12 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
                         // 예를 누르면 정보를 저장하고 화면 이동
                         print(objectName);
                         print(selectedTag);
+                        String sendData = '';
+                        if (croppedImage != null) {
+                           sendData = croppedImage.path;
+                        }
                         if(objectName!.isNotEmpty){
-                          saveObject(selectedTag,3,croppedImage,objectName!);
+                          saveObject(selectedTag,3,sendData,objectName!);
                         }
 
                         // saveObjectAndNavigate(objectName, objectTag);
@@ -297,7 +304,7 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
         format: ui.ImageByteFormat.png);
     List<int> croppedBytes = croppedByteData!.buffer.asUint8List();
     File croppedFile =
-    File('${imageFile.path}_cropped.png');
+    File('${imageFile.path}');
     await croppedFile.writeAsBytes(croppedBytes);
 
     return croppedFile;

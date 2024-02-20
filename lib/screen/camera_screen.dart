@@ -15,14 +15,14 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     ) {
   if (yoloResults.isEmpty) return [];
 
-  double factorX = screen.width / imageWidth / 2;
+  double factorX = screen.width / imageWidth /2;
   double factorY = screen.height / imageHeight / 2;
 
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);
   return yoloResults.map((result) {
-    double left = result["box"][0] * factorX;
-    double top = result["box"][1] * factorY;
-    double right = result["box"][2] * factorX + 20;
+    double left = result["box"][0] * factorX + 10;
+    double top = result["box"][1] * factorY - 10;
+    double right = result["box"][2] * factorX + 40;
     double bottom = result["box"][3] * factorY + 20;
     double fontSize = (bottom - top) * 0.2; // 텍스트 길이가 박스 높이의 70%가 되도록 설정
 
@@ -55,7 +55,8 @@ class CameraView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScanController controller = Get.put(ScanController()); // ScanController 초기화
-
+    controller.setObjectDetectionInProgress(false);
+    print(controller.objectDetectionInProgress);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: GetBuilder<ScanController>(

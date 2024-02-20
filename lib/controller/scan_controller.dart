@@ -27,7 +27,7 @@ class ScanController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    setObjectDetectionInProgress(false);
     initCamera();
     initTFLite();
   }
@@ -124,7 +124,6 @@ class ScanController extends GetxController {
     try {
       // 이미지를 캡처합니다.
       XFile picture = await cameraController.takePicture();
-      objectDetectionInProgress(true);
 
 //      objectDetectionImage(picture as File);
       // 캡처한 이미지의 경로를 반환합니다.

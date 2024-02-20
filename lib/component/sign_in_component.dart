@@ -58,7 +58,7 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
 
   try {
     final response = await dio.post(
-      'http://pengy.dev/users/signIn/',
+      'https://pengy.dev/users/signIn/',
       options: Options(headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $idToken',

@@ -1,5 +1,6 @@
 import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
+import 'package:camera_pj/screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ import '../component/sign_in_component.dart';
 import '../controller/account_controller.dart';
 
 class SignInNameInput extends StatefulWidget {
-  const SignInNameInput({Key? key});
+  const SignInNameInput({super.key});
 
   @override
   State<SignInNameInput> createState() => _SignInNameInputState();
@@ -43,14 +44,7 @@ class _SignInNameInputState extends State<SignInNameInput> {
                   SizedBox(
                     height: 12,
                   ),
-                  TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      labelText: '이름',
-                      labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
-                      border: InputBorder.none,
-                    ),
-                  ),
+                  InputComponent(hintText: '이름', onSubmitted: (value) { _controller.text=value;}),
                 ],
               ),
               Row(
@@ -63,9 +57,7 @@ class _SignInNameInputState extends State<SignInNameInput> {
                     child: DefaultButton(
                       buttonText: '다음으로',
                       onPressed: () async {
-                        print("ct: ${_controller.text}");
-                        // 여기서 _controller.text를 사용합니다.
-                        accountController.signUpWithGoogle(_controller.text);
+                        accountController.signUpWithGoogle(_controller.text).then((value) => Get.to(HomeScreen()));
                       },
                     ),
                   ),

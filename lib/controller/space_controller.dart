@@ -316,6 +316,7 @@ class SpaceController extends GetxController {
                                 onTap: () {
                                   Get.to(() => SpaceDetailScreen(space: space));
                                 },
+
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
@@ -332,7 +333,9 @@ class SpaceController extends GetxController {
                                             SizedBox(
                                               width: 15,
                                             ),
-                                            Column(
+                                            Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   space.spaceName,
@@ -347,6 +350,9 @@ class SpaceController extends GetxController {
                                                 ),
                                                 Text(
                                                   space.address,
+                                                  overflow: TextOverflow.fade,
+                                                  maxLines: 1,
+                                                  softWrap: false,
                                                   style: TextStyle(
                                                     fontFamily: 'OHSQUAREAIR',
                                                     fontSize: 16,
@@ -357,6 +363,7 @@ class SpaceController extends GetxController {
                                                   height: 5,
                                                 )
                                               ],
+                                            ),
                                             ),
                                           ],
                                         ),

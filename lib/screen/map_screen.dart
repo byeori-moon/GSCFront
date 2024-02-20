@@ -75,31 +75,40 @@ class _MapScreenState extends State<MapScreen> {
       );
     }
   }
+  late Future<Set<Marker>> mySpacesFuture;
 
   @override
   void initState() {
     super.initState();
+    mySpacesFuture = spaceController.fetchMySpaces().then((value) => spaceController.getMarkers(context));
     _getUserLocation();
   }
 
   @override
   Widget build(BuildContext context) {
-    Set<Marker> markers = spaceController.getMarkers(context);
-
     return Scaffold(
-      body: GoogleMap(
-        onMapCreated: (GoogleMapController controller) {
-          setState(() {
-            mapController = controller;
-          });
-          _getUserLocation();
-        },
-        initialCameraPosition: CameraPosition(
-          target: initialPosition,
-          zoom: 14.0,
-        ),
-        markers: markers,
-      ),
+      body: FutureBuilder<Set<Marker>>(
+          future: mySpacesFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            return GoogleMap(
+              onMapCreated: (GoogleMapController controller) {
+                setState(() {
+                  mapController = controller;
+                });
+                _getUserLocation();
+              },
+              initialCameraPosition: CameraPosition(
+                target: initialPosition,
+                zoom: 14.0,
+              ),
+              markers: snapshot.data!,
+            );
+          }),
     );
   }
 }
