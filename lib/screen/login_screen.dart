@@ -64,11 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _GoogleButton(
-                      name: '구글 계정으로 로그인하기',
+                      name: 'Sign in with Google',
                       onPressed: onGoogleSignInButtonPressed,
                     ),
                     _GoogleButton(
-                      name: '구글 계정으로 회원가입하기',
+                      name: 'Sign up with Google',
                       onPressed: () {
                         signInWithGoogle().then((user) {
                           print(user);

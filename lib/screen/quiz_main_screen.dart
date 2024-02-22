@@ -34,7 +34,7 @@ class QuizMainScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                          '현재 정어리 개수',
+                          'Caught fish',
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'OHSQUARE',
@@ -87,7 +87,7 @@ class QuizMainScreen extends StatelessWidget {
                       Image.asset(
                           'asset/img/${snapshot.data! <= 10 ? 'small' : snapshot.data! <= 20 ? 'medium' : 'big'}_penguin.png',fit: BoxFit.contain,),
                       Text(
-                        '화재 안전 퀴즈 풀기',
+                        'Fire Safety Quiz',
                         style: TextStyle(
                           fontFamily: 'OHSQUARE',
                           fontSize: 40,
@@ -113,7 +113,7 @@ class QuizMainScreen extends StatelessWidget {
                             quizController.quizScore=0;
                             Get.to(() => QuizSolveScreen(index: 0));
                           },
-                          child: Text('퀴즈 풀기 시작하기',style: TextStyle(fontFamily: 'OHSQUARE'),),
+                          child: Text('Start the Quiz',style: TextStyle(fontFamily: 'OHSQUARE'),),
                         ),
                       ],
                     ),

@@ -23,16 +23,16 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     ) {
   if (yoloResults.isEmpty) return [];
 
-  double factorX = screen.width / imageWidth;
+  double factorX = screen.width / imageWidth /2;
   double factorY = screen.height / imageHeight / 2;
 
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);
   return yoloResults.map((result) {
-    double left = result["box"][0] * factorX -20;
-    double top = result["box"][1] * factorY - 20;
+    double left = result["box"][0] * factorX + 10;
+    double top = result["box"][1] * factorY - 10;
     double right = result["box"][2] * factorX + 40;
-    double bottom = result["box"][3] * factorY + 40;
-    double fontSize = (bottom - top); // 텍스트 길이가 박스 높이의 70%가 되도록 설정
+    double bottom = result["box"][3] * factorY + 20;
+    double fontSize = (bottom - top) * 0.2; // 텍스트 길이가 박스 높이의 70%가 되도록 설정 텍스트 길이가 박스 높이의 70%가 되도록 설정
     double rleft = result["box"][0];
     double rtop = result["box"][1];
     double rright = result["box"][2];
@@ -47,7 +47,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
           print('Tag: ${result['tag']}');
         },
         child: Container(
-          width: right - left,
+          width: right - left + 10,
           height: bottom - top,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
@@ -158,9 +158,9 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       ) async {
     // 자르기 영역 계산
     int cropLeft = left.toInt();
-    int cropTop = top.toInt();
-    int cropWidth = (right - left).toInt();
-    int cropHeight = (bottom - top).toInt();
+    int cropTop = top.toInt() -10;
+    int cropWidth = (right - left).toInt() + 40;
+    int cropHeight = (bottom - top).toInt() + 40;
 
     // 이미지 자르기
     File croppedImage = await cropImage(
@@ -227,7 +227,8 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
                 // 태그 표시
                 SizedBox(height: 10),
 
-                ClipOval(
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(0.0),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
                     height: MediaQuery.of(context).size.width * 0.5,

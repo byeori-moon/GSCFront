@@ -20,7 +20,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
       backgroundColor: BACKGROUND_COLOR,
       appBar: AppBar(
         title: Text(
-          '내장소 등록하기',
+          'Register My Location',
           style: TextStyle(fontFamily: 'OHSQUAREAIR'),
         ),
         backgroundColor: BACKGROUND_COLOR,
@@ -36,7 +36,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(13.0),
                     child: Text(
-                      '장소 등록',
+                      'Register Location',
                       style: TextStyle(fontSize: 24, fontFamily: 'OHSQUARE', color: BUTTON_BLUE),
                     ),
                   ),
@@ -49,7 +49,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                     child: TextField(
                       controller: nicknameController,
                       decoration: InputDecoration(
-                        labelText: '내장소 이름 설정',
+                        labelText: 'Locatin name',
                         labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
                         border: InputBorder.none,
                       ),
@@ -61,7 +61,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           decoration: InputDecoration(
-                            labelText: '태그 선택',
+                            labelText: 'Tags',
                             labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -84,7 +84,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 20),
-                  DefaultButton(buttonText: '장소 저장하기', onPressed: () async {
+                  DefaultButton(buttonText: 'Save Location', onPressed: () async {
                     String nickname = nicknameController.text;
                     String address= "${addressController.latitude.value}, ${addressController.longitude.value}";
                     String place = addressController.placeAddress.value;
@@ -99,7 +99,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                       }
                       addressController.savePlace(nickname, address, place,tagIndex);
                     } else {
-                      Get.snackbar('Error', '이름과 태그를 입력해주세요');
+                      Get.snackbar('Error', 'Please enter the name and tags.');
                     }
                   }),
                   SizedBox(height: 20),

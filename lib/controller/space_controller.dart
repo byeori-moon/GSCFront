@@ -104,12 +104,12 @@ class SpaceController extends GetxController {
         infoWindow: InfoWindow(
           title: space.spaceName,
           snippet: space.category == SpaceCategoryType.house
-              ? '집'
+              ? 'Home'
               : space.category == SpaceCategoryType.office
-                  ? '직장'
+                  ? 'Comp'
                   : space.category == SpaceCategoryType.cafe
-                      ? '카페'
-                      : '기타',
+                      ? 'Cafe'
+                      : 'etc',
         ),
         onTap: () {
           _showModalBottomSheet(context, space);
@@ -207,10 +207,10 @@ class SpaceController extends GetxController {
                         size: 20,
                       ),
                       Text(
-                        '장소 상세보기',
+                        'View details',
                         style: TextStyle(
                           fontFamily: 'OHSQUARE',
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -289,15 +289,15 @@ class SpaceController extends GetxController {
                                   },
                                   child: Text(
                                     category == SpaceCategoryType.house
-                                        ? '집'
+                                        ? 'Home'
                                         : category == SpaceCategoryType.office
-                                            ? '직장'
+                                            ? 'Comp'
                                             : category == SpaceCategoryType.cafe
-                                                ? '카페'
+                                                ? 'Cafe'
                                                 : category ==
                                                         SpaceCategoryType.etc
-                                                    ? '기타'
-                                                    : '전체',
+                                                    ? 'Etc'
+                                                    : 'All',
                                     style: TextStyle(
                                       fontFamily: 'OHSQUARE',
                                       fontSize: 12,
@@ -392,7 +392,7 @@ class SpaceController extends GetxController {
                       bottom: 22,
                       child: SizedBox(
                         height: 50,
-                        width: 130,
+                        width: 150,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: BUTTON_BLUE,
@@ -408,13 +408,13 @@ class SpaceController extends GetxController {
                                 size: 20,
                               ),
                               SizedBox(
-                                width: 4,
+                                width: 2,
                               ),
                               Text(
-                                '지도보기',
+                                'View map',
                                 style: TextStyle(
                                   fontFamily: 'OHSQUARE',
-                                  fontSize: 16,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
@@ -467,12 +467,12 @@ class SpaceCategoryIcon extends StatelessWidget {
         ),
         Text(
           spaceCategoryType == SpaceCategoryType.house
-              ? '집'
+              ? 'Home'
               : spaceCategoryType == SpaceCategoryType.office
-                  ? '직장'
+                  ? 'Comp'
                   : spaceCategoryType == SpaceCategoryType.cafe
-                      ? '카페'
-                      : '기타',
+                      ? 'Cafe'
+                      : 'Etc',
           style: TextStyle(
             fontFamily: 'OHSQUAREAIR',
             fontSize: 15,

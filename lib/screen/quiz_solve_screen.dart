@@ -150,7 +150,7 @@ class QuizSolveScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '현재 점수: ${quizController.quizScore}/5',
+                            'Current Score: ${quizController.quizScore}/5',
                             style: TextStyle(
                               color: BACKGROUND_COLOR,
                               fontFamily: 'OHSQUARE',
@@ -171,7 +171,7 @@ class QuizSolveScreen extends StatelessWidget {
                               padding: EdgeInsets.symmetric(vertical: 12,horizontal: 40)
                             ),
                             child: Text(
-                              '다음 문제',
+                              'Next',
                               style: TextStyle(
                                 fontFamily: 'OHSQUARE',
                                 fontSize: 18,
