@@ -9,8 +9,8 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class InformationScreen extends StatefulWidget {
   final String objectId;
-
-  InformationScreen({required this.objectId});
+  final bool type;
+  InformationScreen({required this.objectId, required this.type});
 
   @override
   State<InformationScreen> createState() => _InformationScreenState();
@@ -35,6 +35,7 @@ class _InformationScreenState extends State<InformationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         backgroundColor: BACKGROUND_COLOR,
         body: Center(
             child: FutureBuilder<ObjectInformationData>(
@@ -56,7 +57,9 @@ class _InformationScreenState extends State<InformationScreen> {
                     ),
                   );
                   return ListView(
+
                     children: [
+
                       Padding(
                         padding: const EdgeInsets.only(left: 40.0, right: 16.0),
                         child: Row(
@@ -71,14 +74,18 @@ class _InformationScreenState extends State<InformationScreen> {
                             ),
                             SizedBox(
                               height: 40,
-                              child: ElevatedButton(
+                              child: widget.type
+                                  ? ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: BUTTON_BLUE,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(999),
-                                    )),
-                                onPressed: () {},
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: BUTTON_BLUE,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(999),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // 버튼이 눌렸을 때 수행할 동작 추가
+                                },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -98,7 +105,8 @@ class _InformationScreenState extends State<InformationScreen> {
                                     ),
                                   ],
                                 ),
-                              ),
+                              )
+                                  : SizedBox(), // widget.type이 false인 경우 빈 SizedBox 반환
                             ),
                           ],
                         ),
@@ -415,7 +423,11 @@ class _InformationScreenState extends State<InformationScreen> {
                       Image.asset('asset/img/default_character_bottom.png'),
                     ],
                   );
-                })));
+                }
+                )
+        )
+
+    );
   }
 }
 

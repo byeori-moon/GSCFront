@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'controller/account_controller.dart';
+import 'controller/quiz_controller.dart';
 import 'controller/space_controller.dart';
 
 void main() async {
@@ -19,7 +20,7 @@ void main() async {
   Get.put(AccountController());
   Get.put(SpaceController());
   Get.put(ObjectController());
-
+  Get.put(QuizController());
   runApp(
     GetMaterialApp(
       theme: ThemeData(
@@ -27,7 +28,7 @@ void main() async {
         fontFamily: 'OHSQUAREAIR'
       ),
 
-      home: MainPage(),
+      home: LoginScreen(),
     ),
   );
 }

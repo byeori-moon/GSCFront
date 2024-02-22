@@ -29,6 +29,7 @@ Future<User?> signInWithGoogle() async {
           await FirebaseAuth.instance.signInWithCredential(credential);
       final idToken = await userCredential.user?.getIdToken(true);
       await TokenManager().setToken(idToken!);
+      await TokenManager().setFcmToken(fcmToken!);
       print(idToken);
 
 
@@ -50,7 +51,9 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
   }
 
   final String? idToken = await TokenManager().getToken();
+  print("gt: $idToken");
   final fcmToken = await TokenManager().getFcmToken();
+  print("gt: $fcmToken");
 
   final dio = Dio();
   dio.interceptors.add(CustomInterceptor());
@@ -69,8 +72,7 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
 
     if (response.statusCode == 200) {
       final responseBody = response.data;
-      print(response.data);
-      Get.to(HomeScreen());
+      Get.to(()=>HomeScreen());
     } else if (response.statusCode == 404) {
       Get.to(SignInNameInput());
     } else {

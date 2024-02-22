@@ -27,7 +27,7 @@ class ScanController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
+    setObjectDetectionInProgress(false);
     initCamera();
     initTFLite();
   }
@@ -62,11 +62,11 @@ class ScanController extends GetxController {
 
   initTFLite() async {
     await vision.loadYoloModel(
-      labels: 'asset/labels2.txt',
-      modelPath: 'asset/yolov5n.tflite',
-      modelVersion: "yolov5",
+      labels: 'asset/labels1.txt',
+      modelPath: 'asset/best_float32.tflite',
+      modelVersion: "yolov8",
       quantization: false,
-      numThreads: 1,
+      numThreads: 2,
       useGpu: false,
     );
   }
@@ -78,9 +78,9 @@ class ScanController extends GetxController {
       bytesList: image.planes.map((plane) => plane.bytes).toList(),
       imageHeight: image.height,
       imageWidth: image.width,
-      iouThreshold: 0.4,
-      confThreshold: 0.4,
-      classThreshold: 0.5,
+      iouThreshold: 0.5,
+      confThreshold: 0.5,
+      classThreshold: 0.7,
     );
 
 
@@ -124,7 +124,6 @@ class ScanController extends GetxController {
     try {
       // 이미지를 캡처합니다.
       XFile picture = await cameraController.takePicture();
-      objectDetectionInProgress(true);
 
 //      objectDetectionImage(picture as File);
       // 캡처한 이미지의 경로를 반환합니다.
@@ -153,8 +152,8 @@ class ScanController extends GetxController {
             'Authorization': 'Bearer $idToken',
           }),
           data:{
-            "my_space": 1,
-            "fire_hazard": 4,
+            "my_space": 6,
+            "fire_hazard": 1,
             "thumbnail_image": "path/to/thumbnail.jpg",
             "nickname": "WhilteRefrigerator"
           }

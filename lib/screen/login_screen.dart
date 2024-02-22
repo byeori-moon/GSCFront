@@ -37,9 +37,25 @@ class _LoginScreenState extends State<LoginScreen> {
       home: Scaffold(
         body: Column(
           children: [
-            Image.asset(
-              'asset/img/default_character_main.png',
-              fit: BoxFit.contain,
+            Stack(
+                children: [
+                  // 다른 위젯들을 추가하고, 이 위젯 위에 텍스트를 부동시킵니다.
+                  Image.asset(
+                    'asset/img/default_character_main.png',
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    bottom: -20, // 아래에서 20 픽셀 떨어진 위치에 텍스트를 배치합니다.
+                    right: 20,   // 왼쪽에서 20 픽셀 떨어진 위치에 텍스트를 배치합니다.
+                    child: Text(
+                      'PENGY',
+                      style: TextStyle(
+                        fontSize: 64,
+                        fontFamily: 'MAINT',
+                      ),
+                    ),
+                  ),
+                ]
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),

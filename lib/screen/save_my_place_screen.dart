@@ -68,7 +68,7 @@ class SaveMyPlaceScreen extends StatelessWidget {
                             ),
                           ),
                           value: selectedTag,
-                          items: ['Home', 'Cafe', 'School'] // 선택할 태그 목록
+                          items: ['Home', 'Cafe', 'Company'] // 선택할 태그 목록
                               .map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -86,10 +86,18 @@ class SaveMyPlaceScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   DefaultButton(buttonText: '장소 저장하기', onPressed: () async {
                     String nickname = nicknameController.text;
-                    String address= "${addressController.longitude.value}, ${addressController.latitude.value}";
+                    String address= "${addressController.latitude.value}, ${addressController.longitude.value}";
                     String place = addressController.placeAddress.value;
                     if (nickname.isNotEmpty && selectedTag!.isNotEmpty) {
-                      addressController.savePlace(nickname, address, place,selectedTag!);
+                      var tagIndex = 4;
+                      if(selectedTag=='Cafe'){
+                        tagIndex = 2;
+                      }else if(selectedTag =='Company'){
+                        tagIndex = 3;
+                      }else if(selectedTag=='Home'){
+                        tagIndex = 4;
+                      }
+                      addressController.savePlace(nickname, address, place,tagIndex);
                     } else {
                       Get.snackbar('Error', '이름과 태그를 입력해주세요');
                     }
