@@ -10,8 +10,27 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image/image.dart' as img;
+import 'dart:math' as math;
 
 import '../component/token_manager.dart';
+
+String? selectedLabel; // 추가: 선택된 라벨을 저장할 변수
+
+// 이미지를 1:1 비율로 조정하는 함수
+Future<File> resizeImage(File imageFile, int size) async {
+  // 이미지 파일을 읽어옴
+  img.Image image = img.decodeImage(await imageFile.readAsBytes())!;
+
+  // 이미지의 가로와 세로 중 작은 쪽을 기준으로 1:1 비율로 조정
+  img.Image resizedImage = img.copyResizeCropSquare(image, size: size);
+
+  // 조정된 이미지를 파일로 저장
+  File resizedFile = File('${imageFile.path}_resized.jpg');
+  await resizedFile.writeAsBytes(img.encodeJpg(resizedImage));
+
+  return resizedFile;
+}
 
 List<Widget> displayBoxesAroundRecognizedObjects(
     Image image,
@@ -23,7 +42,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     ) {
   if (yoloResults.isEmpty) return [];
 
-  double factorX = screen.width / imageWidth /2;
+  double factorX = screen.width / imageWidth ;
   double factorY = screen.height / imageHeight / 2;
 
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);
@@ -37,6 +56,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     double rtop = result["box"][1];
     double rright = result["box"][2];
     double rbottom = result["box"][3];
+    double max = math.max(right - left + 50,bottom - top);
 
     return Positioned(
       left: left,
@@ -45,10 +65,12 @@ List<Widget> displayBoxesAroundRecognizedObjects(
         onTap: () {
           onTapCallback(rleft, rtop, rright, rbottom);
           print('Tag: ${result['tag']}');
+          selectedLabel = result['tag']; // 클릭된 객체의 라벨을 저장
+
         },
         child: Container(
-          width: right - left + 10,
-          height: bottom - top,
+          width: right - left + 100,
+          height: bottom - top + 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(color: Colors.pink, width: 2.0),
@@ -72,6 +94,8 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     required this.imageHeight,
   });
 
+
+
   void saveObject(int space,int hazard,var path,String name) async {
     // TODO: 여기에 실제 저장 로직 구현
 
@@ -85,7 +109,7 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       FormData formData = FormData.fromMap({
         'my_space': space,
         'fire_hazard': hazard,
-        'thumbnail_image': await MultipartFile.fromFile(path),
+        // 'thumbnail_image': await MultipartFile.fromFile(path),
         'nickname': name,
       });
       final response = await dio.post(
@@ -99,19 +123,17 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       if (response.statusCode == 200 || response.statusCode == 201) {
         print('물체등록 성공: ${response.data}');
 
-        Get.to(InformationScreen(objectId: "$hazard", type: true));
+        Get.to(InformationScreen(objectId: "$hazard", type: false));
 
       } else {
         print('물체등록 실패: ${response.data}');
       }
     } catch (e) {
       print(path);
-      Get.to(InformationScreen(objectId: "$hazard",type: true));
+      // Get.to(InformationScreen(objectId: "$hazard",type: true));
       print('물체등록 요청 중 오류 발생: $e');
     }
   }
-
-
 
 
   @override
@@ -157,14 +179,15 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       BuildContext context,
       ) async {
     // 자르기 영역 계산
-    int cropLeft = left.toInt();
+    int cropLeft = left.toInt() + 10;
     int cropTop = top.toInt() -10;
-    int cropWidth = (right - left).toInt() + 40;
-    int cropHeight = (bottom - top).toInt() + 40;
+    int cropWidth = (right - left).toInt() + 100;
+    int cropHeight = (bottom - top).toInt() + 50;
 
     // 이미지 자르기
     File croppedImage = await cropImage(
         File(imagePath), cropLeft, cropTop, cropWidth, cropHeight);
+    File resizedImage = await resizeImage(croppedImage, 300);
 
     String? objectName = null;
     final spaceController = Get.find<SpaceController>(); // 가정한 ScanController 가져오기
@@ -177,8 +200,8 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.8,
+            width: MediaQuery.of(context).size.width,
+            height: 400,
             padding: EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -198,7 +221,6 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(width: 10), // 간격 조절
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         decoration: InputDecoration(
@@ -224,39 +246,44 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
 
                   ],
                 ),
-                // 태그 표시
-                SizedBox(height: 10),
 
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(0.0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.width * 0.5,
-                    child: Image.file(
-                      croppedImage,
-                      fit: BoxFit.cover,
-                      scale: 5.0,
-                    ),
-                  ),
-                ),
                 // 이름 입력란
 
-                SizedBox(height: 20),
-                // 예/아니오 버튼
+                SizedBox(height: 20),                // 예/아니오 버튼
+                Text(
+                  "${selectedLabel}",
+                  style: TextStyle(
+                    fontSize: 25, // 글꼴 크기 지정
+                    fontWeight: FontWeight.bold,
+                    // 다른 스타일 속성들
+                  ),
+                ),                SizedBox(height: 20),                // 예/아니오 버튼
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
+
                       onPressed: () {
                         // 예를 누르면 정보를 저장하고 화면 이동
                         print(objectName);
                         print(selectedTag);
                         String sendData = '';
                         if (croppedImage != null) {
-                           sendData = croppedImage.path;
+                           sendData = resizedImage.path;
                         }
                         if(objectName!.isNotEmpty){
-                          saveObject(selectedTag,3,sendData,objectName!);
+                          var stc =3;
+                          if(selectedLabel=="refrigerator") stc = 3;
+                          else if (selectedLabel=="air conditioner") stc = 4;
+                          else if (selectedTag=="power soket") stc =2;
+                          else if (selectedTag=="gas_stove") stc =1;
+                          else if (selectedTag=="washing machine") stc = 7;
+                          else if (selectedTag=="wood boiler")stc=6;
+
+                            saveObject(selectedTag,stc,sendData,objectName!);
+//                        print(selectedLabel);
+                          Get.to(InformationScreen(objectId: "$stc", type: true));
                         }
 
                         // saveObjectAndNavigate(objectName, objectTag);
@@ -264,12 +291,14 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
                       child: Text('예'),
                     ),
                     SizedBox(width: 20),
+
                     ElevatedButton(
                       onPressed: () {
                         // 아니요를 누르면 모달 닫기
                         Navigator.pop(context);
                       },
                       child: Text('아니요'),
+
                     ),
                   ],
                 ),

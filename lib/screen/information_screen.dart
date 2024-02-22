@@ -7,6 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+import 'camera_after_screen.dart';
+
+
 class InformationScreen extends StatefulWidget {
   final String objectId;
   final bool type;
@@ -50,7 +53,7 @@ class _InformationScreenState extends State<InformationScreen> {
                   List<String> lines =
                       _loadedData!.fireSafetyInstructions.split('\n');
                   final YoutubePlayerController _con = YoutubePlayerController(
-                    initialVideoId: _loadedData!.youtubeVideoLinks[0],
+                    initialVideoId: _loadedData!.youtubeVideoLinks,
                     flags: const YoutubePlayerFlags(
                       autoPlay: false,
                       mute: false,
@@ -97,7 +100,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                       width: 4,
                                     ),
                                     Text(
-                                      '내 장소에 추가하기',
+                                      'add MySpace',
                                       style: TextStyle(
                                         fontFamily: 'OHSQUARE',
                                         fontSize: 16,
@@ -117,7 +120,7 @@ class _InformationScreenState extends State<InformationScreen> {
                           children: [
                             ListTile(
                               title: Text(
-                                '🔥 화재 사례',
+                                '🔥Fire incident',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,
@@ -235,14 +238,14 @@ class _InformationScreenState extends State<InformationScreen> {
                             ),
                             ListTile(
                               title: Text(
-                                '❗️안전하게 사용하는 법 \n(출처: 땡땡소방서)',
+                                '❗The Safety Method',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,
                                     color: BUTTON_BLUE),
                               ),
                               subtitle: Text(
-                                '보일러의 안전한 사용법을 확인하세요.',
+                                'Attention',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUAREAIR',
                                     fontSize: 14,
@@ -281,14 +284,14 @@ class _InformationScreenState extends State<InformationScreen> {
                             ),
                             ListTile(
                               title: Text(
-                                '📺 관련 Youtube 동영상',
+                                '📺 Youtube Videos',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,
                                     color: BUTTON_BLUE),
                               ),
                               subtitle: Text(
-                                '관련 동영상을 시청하세요.',
+                                'Watch related videos.',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUAREAIR',
                                     fontSize: 14,
@@ -300,7 +303,7 @@ class _InformationScreenState extends State<InformationScreen> {
                             ),
                             ListTile(
                               title: Text(
-                                '📜 관련 논문',
+                                '📜 Related papers',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,

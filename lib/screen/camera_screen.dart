@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -15,23 +15,23 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     ) {
   if (yoloResults.isEmpty) return [];
 
-  double factorX = screen.width / imageWidth /2;
+  double factorX = screen.width / imageWidth ;
   double factorY = screen.height / imageHeight / 2;
-
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);
   return yoloResults.map((result) {
-    double left = result["box"][0] * factorX + 10;
+    double left = result["box"][0] * factorX;
     double top = result["box"][1] * factorY - 10;
     double right = result["box"][2] * factorX + 40;
-    double bottom = result["box"][3] * factorY + 20;
+    double bottom = result["box"][3] * factorY + 10;
     double fontSize = (bottom - top) * 0.2; // 텍스트 길이가 박스 높이의 70%가 되도록 설정
+    double max = math.max(right - left + 50,bottom - top);
 
     return Positioned(
       left: left,
       top: top + 20,
       child: Container(
-        width: right - left + 10,
-        height: bottom - top,
+        width: right - left + 100,
+        height: bottom - top + 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(color: Colors.pink, width: 2.0),
@@ -41,12 +41,13 @@ List<Widget> displayBoxesAroundRecognizedObjects(
           style: TextStyle(
             background: Paint()..color = colorPick,
             color: Colors.white,
-            fontSize: min(fontSize, 18.0),
+            fontSize: math.min(fontSize, 18.0),
           ),
         ),
       ),
     );
-  }).toList();
+  }
+  ).toList();
 }
 
 class CameraView extends StatelessWidget {
@@ -57,6 +58,15 @@ class CameraView extends StatelessWidget {
     final ScanController controller = Get.put(ScanController()); // ScanController 초기화
     controller.setObjectDetectionInProgress(false);
     print(controller.objectDetectionInProgress);
+    var tmp = MediaQuery.of(context).size;
+    var screenH = math.max(tmp.height, tmp.width);
+    var screenW = math.min(tmp.height, tmp.width);
+    var width = controller.imageWidth.value;
+    var height = controller.imageHeight.value;
+    var previewH = math.max(height, width);
+    var previewW = math.min(height, width);
+    var screenRatio = screenH / screenW;
+    var previewRatio = previewH / previewW;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: GetBuilder<ScanController>(

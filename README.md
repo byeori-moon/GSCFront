@@ -1,16 +1,23 @@
 # PENGY
 
-A new Flutter project.
+icon
+
+## UN's Sustainable Development 
+### Goal 11. Sustainable Cities and Communities
+
+### Solution
+In modern society, many fire-related issues arise due to ignorance and carelessness. Our app aims to address these problems by introducing a highly unique approach to space management.
+
+To tackle this issue, we have structured the app around managing one's space. The main functionality of the app is to construct one's space and place various objects within it.
+
+During this process, we identify objects that pose a fire hazard for placement. Through this, users must use the camera to identify and register objects with fire hazards while constructing their space. In doing so, users become aware of fire-hazardous objects and receive information about the various problems associated with them and their solutions. Based on the provided solutions, users' perception shifts from ignorance to awareness and preparedness.
+  
+## Screen
+
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Click to download a releaed apk. To install this, you need to able downloading an app from unknown sources.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

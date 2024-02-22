@@ -115,7 +115,6 @@ class ObjectController extends GetxController {
         if (response.statusCode == 200) {
           print('edu-content 가져오기 성공: ${response.data}');
           objectInformationData=ObjectInformationData.fromJson(response.data);
-
         } else {
           print('edu-content 가져오기 실패: ${response.data}');
         }

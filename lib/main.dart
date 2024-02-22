@@ -2,6 +2,7 @@
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/object_controller.dart';
 import 'package:camera_pj/pages/main_page.dart';
+import 'package:camera_pj/screen/camera_screen.dart';
 import 'package:camera_pj/screen/map_screen.dart';
 import 'package:camera_pj/screen/home_screen.dart';
 import 'package:camera_pj/screen/information_screen.dart';
@@ -30,7 +31,7 @@ void main() async {
         fontFamily: 'OHSQUAREAIR'
       ),
 
-      home: LoginScreen(),
+      home: CameraView(),
     ),
   );
 }

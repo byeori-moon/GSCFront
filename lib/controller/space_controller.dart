@@ -40,7 +40,7 @@ class Space {
       case 2:
         spaceCategoryType = SpaceCategoryType.cafe;
         break;
-        default:
+      default:
         spaceCategoryType = SpaceCategoryType.etc;
         break;
     }
@@ -84,7 +84,7 @@ class SpaceController extends GetxController {
     if (response.statusCode == 200) {
       List<dynamic> spacesJson = response.data;
       var fetchedSpaces =
-          spacesJson.map((json) => Space.fromJson(json)).toList();
+      spacesJson.map((json) => Space.fromJson(json)).toList();
       spaces.assignAll(fetchedSpaces);
       print("spc: ${spaces[0].id}");
       return spacesJson.map((json) => Space.fromJson(json)).toList();
@@ -104,12 +104,12 @@ class SpaceController extends GetxController {
         infoWindow: InfoWindow(
           title: space.spaceName,
           snippet: space.category == SpaceCategoryType.house
-              ? 'Home'
+              ? '집'
               : space.category == SpaceCategoryType.office
-                  ? 'Comp'
-                  : space.category == SpaceCategoryType.cafe
-                      ? 'Cafe'
-                      : 'etc',
+              ? '직장'
+              : space.category == SpaceCategoryType.cafe
+              ? '카페'
+              : '기타',
         ),
         onTap: () {
           _showModalBottomSheet(context, space);
@@ -207,10 +207,10 @@ class SpaceController extends GetxController {
                         size: 20,
                       ),
                       Text(
-                        'View details',
+                        '장소 상세보기',
                         style: TextStyle(
                           fontFamily: 'OHSQUARE',
-                          fontSize: 14,
+                          fontSize: 16,
                         ),
                       ),
                     ],
@@ -289,15 +289,15 @@ class SpaceController extends GetxController {
                                   },
                                   child: Text(
                                     category == SpaceCategoryType.house
-                                        ? 'Home'
+                                        ? '집'
                                         : category == SpaceCategoryType.office
-                                            ? 'Comp'
-                                            : category == SpaceCategoryType.cafe
-                                                ? 'Cafe'
-                                                : category ==
-                                                        SpaceCategoryType.etc
-                                                    ? 'Etc'
-                                                    : 'All',
+                                        ? '직장'
+                                        : category == SpaceCategoryType.cafe
+                                        ? '카페'
+                                        : category ==
+                                        SpaceCategoryType.etc
+                                        ? '기타'
+                                        : '전체',
                                     style: TextStyle(
                                       fontFamily: 'OHSQUARE',
                                       fontSize: 12,
@@ -310,12 +310,12 @@ class SpaceController extends GetxController {
                         ),
                         Expanded(child: Obx(() {
                           var filteredSpaces = currentCategory.value ==
-                                  SpaceCategoryType.all
+                              SpaceCategoryType.all
                               ? spaces
                               : spaces
-                                  .where((space) =>
-                                      space.category == currentCategory.value)
-                                  .toList();
+                              .where((space) =>
+                          space.category == currentCategory.value)
+                              .toList();
 
                           return ListView.builder(
                             itemCount: filteredSpaces.length,
@@ -334,7 +334,7 @@ class SpaceController extends GetxController {
                                             horizontal: 20.0),
                                         child: Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.end,
+                                          CrossAxisAlignment.end,
                                           children: [
                                             SpaceCategoryIcon(
                                               spaceCategoryType: space.category,
@@ -343,36 +343,36 @@ class SpaceController extends GetxController {
                                               width: 15,
                                             ),
                                             Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  space.spaceName,
-                                                  style: TextStyle(
-                                                    fontFamily: 'OHSQUARE',
-                                                    fontSize: 25,
-                                                    color: Color(0XFF272727),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    space.spaceName,
+                                                    style: TextStyle(
+                                                      fontFamily: 'OHSQUARE',
+                                                      fontSize: 25,
+                                                      color: Color(0XFF272727),
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  height: 7,
-                                                ),
-                                                Text(
-                                                  space.address,
-                                                  overflow: TextOverflow.fade,
-                                                  maxLines: 1,
-                                                  softWrap: false,
-                                                  style: TextStyle(
-                                                    fontFamily: 'OHSQUAREAIR',
-                                                    fontSize: 16,
-                                                    color: Color(0XFF727272),
+                                                  SizedBox(
+                                                    height: 7,
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                )
-                                              ],
-                                            ),
+                                                  Text(
+                                                    space.address,
+                                                    overflow: TextOverflow.fade,
+                                                    maxLines: 1,
+                                                    softWrap: false,
+                                                    style: TextStyle(
+                                                      fontFamily: 'OHSQUAREAIR',
+                                                      fontSize: 16,
+                                                      color: Color(0XFF727272),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -392,7 +392,7 @@ class SpaceController extends GetxController {
                       bottom: 22,
                       child: SizedBox(
                         height: 50,
-                        width: 150,
+                        width: 130,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: BUTTON_BLUE,
@@ -408,13 +408,13 @@ class SpaceController extends GetxController {
                                 size: 20,
                               ),
                               SizedBox(
-                                width: 2,
+                                width: 4,
                               ),
                               Text(
-                                'View map',
+                                '지도보기',
                                 style: TextStyle(
                                   fontFamily: 'OHSQUARE',
-                                  fontSize: 14,
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -457,22 +457,22 @@ class SpaceCategoryIcon extends StatelessWidget {
             spaceCategoryType == SpaceCategoryType.house
                 ? Icons.house_outlined
                 : spaceCategoryType == SpaceCategoryType.office
-                    ? Icons.apartment
-                    : spaceCategoryType == SpaceCategoryType.cafe
-                        ? Icons.local_cafe
-                        : Icons.more,
+                ? Icons.apartment
+                : spaceCategoryType == SpaceCategoryType.cafe
+                ? Icons.local_cafe
+                : Icons.more,
             size: 30,
             color: BUTTON_BLUE,
           ),
         ),
         Text(
           spaceCategoryType == SpaceCategoryType.house
-              ? 'Home'
+              ? '집'
               : spaceCategoryType == SpaceCategoryType.office
-                  ? 'Comp'
-                  : spaceCategoryType == SpaceCategoryType.cafe
-                      ? 'Cafe'
-                      : 'Etc',
+              ? '직장'
+              : spaceCategoryType == SpaceCategoryType.cafe
+              ? '카페'
+              : '기타',
           style: TextStyle(
             fontFamily: 'OHSQUAREAIR',
             fontSize: 15,
