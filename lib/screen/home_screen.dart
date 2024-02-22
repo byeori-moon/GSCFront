@@ -162,7 +162,7 @@ class _HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "새롭게 내 장소를 등록해주세요!",
+            "Create a new place!",
             textAlign: TextAlign.start,
             style: TextStyle(
               color: BUTTON_BLUE,
@@ -183,7 +183,7 @@ class _HomeScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
-                    "지번, 도로명, 건물명으로 검색",
+                    "Search your address",
                     style: TextStyle(
                       color: BUTTON_BLUE,
                       fontFamily: 'OHSQUAREAIR',
@@ -201,7 +201,7 @@ class _HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Text(
-              "지도에서 장소 확인하기",
+              "Check on Map",
               textAlign: TextAlign.start,
               style: TextStyle(
                 color: BUTTON_BLUE,
@@ -259,7 +259,7 @@ class _HomeScreen extends StatelessWidget {
                             width: 14,
                           ),
                           Text(
-                            '빠른 촬영',
+                            'Capture',
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'OHSQUAREAIR',
@@ -299,7 +299,7 @@ class _HomeScreen extends StatelessWidget {
                             width: 14,
                           ),
                           Text(
-                            '내 장소\n리스트',
+                            'Place List',
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'OHSQUAREAIR',

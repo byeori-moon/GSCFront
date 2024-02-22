@@ -30,7 +30,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
       left: left,
       top: top + 20,
       child: Container(
-        width: right - left,
+        width: right - left + 10,
         height: bottom - top,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),

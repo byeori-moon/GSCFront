@@ -63,7 +63,7 @@ class ScanController extends GetxController {
   initTFLite() async {
     await vision.loadYoloModel(
       labels: 'asset/labels1.txt',
-      modelPath: 'asset/best_float32.tflite',
+      modelPath: 'asset/best_float16.tflite',
       modelVersion: "yolov8",
       quantization: false,
       numThreads: 2,
@@ -78,9 +78,9 @@ class ScanController extends GetxController {
       bytesList: image.planes.map((plane) => plane.bytes).toList(),
       imageHeight: image.height,
       imageWidth: image.width,
-      iouThreshold: 0.5,
-      confThreshold: 0.5,
-      classThreshold: 0.7,
+      iouThreshold: 0.4,
+      confThreshold: 0.4,
+      classThreshold: 0.5,
     );
 
 
