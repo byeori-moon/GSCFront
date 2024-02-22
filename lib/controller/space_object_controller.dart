@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
+import '../component/token_manager.dart';
+import 'account_controller.dart';
+
 class SpaceDetail {
   final int id;
   final int mySpace;
@@ -28,49 +31,38 @@ class SpaceDetail {
 }
 
 class SpaceObjectController extends GetxController {
-
-  var data = [{
-    "id": 10, // 예를 들어 생성된 객체의 ID
-    "my_space": 1,
-    "fire_hazard": 4,
-    "thumbnail_image": "path/to/thumbnail.jpg",
-    "nickname": "WhilteRefrigerator"
-  },{
-    "id": 10, // 예를 들어 생성된 객체의 ID
-    "my_space": 1,
-    "fire_hazard": 4,
-    "thumbnail_image": "path/to/thumbnail.jpg",
-    "nickname": "WhilteRefrigerator"
-  },{
-    "id": 10, // 예를 들어 생성된 객체의 ID
-    "my_space": 1,
-    "fire_hazard": 4,
-    "thumbnail_image": "path/to/thumbnail.jpg",
-    "nickname": "WhilteRefrigerator"
-  }];
-  var spaceDetails = <SpaceDetail>[].obs;
+  List<SpaceDetail> spaceDetails = <SpaceDetail>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    var fetchedData = data as List;
-    spaceDetails.value = fetchedData.map((json) => SpaceDetail.fromJson(json)).toList();
   }
+
   final Dio dio = Dio();
 
-  Future<void> fetchSpaceObjects(int spaceId) async {
+  Future<List<SpaceDetail>> fetchSpaceObjects(int spaceId) async {
     try {
-      final response = await dio.get('http://pengy.dev:8000/api/spaces/myspace/$spaceId/');
+      dio.interceptors.add(CustomInterceptor());
+      final idToken = await TokenManager().getToken();
+      final response = await dio.get(
+        'https://pengy.dev/api/spaces/myspace/$spaceId/',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        }),
+      );
+
       if (response.statusCode == 200) {
-        var fetchedObjects = List<SpaceDetail>.from(response.data.map((json) => SpaceDetail.fromJson(json)));
-        spaceDetails.value = fetchedObjects;
+        var fetchedObjects = List<SpaceDetail>.from(
+            response.data.map((json) => SpaceDetail.fromJson(json)));
+        spaceDetails = fetchedObjects;
       } else {
-        // 오류 처리
         print('Failed to load space objects');
       }
+      return spaceDetails;
     } catch (e) {
-      // 예외 처리
       print(e.toString());
     }
+    return spaceDetails;
   }
 }

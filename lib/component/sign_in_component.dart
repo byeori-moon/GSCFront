@@ -27,12 +27,11 @@ Future<User?> signInWithGoogle() async {
       );
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+      final idToken = await userCredential.user?.getIdToken(true);
+      await TokenManager().setToken(idToken!);
+      await TokenManager().setFcmToken(fcmToken!);
+      print(idToken);
 
-      if (await TokenManager().getToken() == null) {
-        final idToken = await userCredential.user?.getIdToken(true);
-        await TokenManager().setToken(idToken!);
-        print(idToken);
-      }
 
       if (TokenManager().getFcmToken() == null) {
         await TokenManager().setFcmToken(fcmToken!);
@@ -52,14 +51,16 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
   }
 
   final String? idToken = await TokenManager().getToken();
+  print("gt: $idToken");
   final fcmToken = await TokenManager().getFcmToken();
+  print("gt: $fcmToken");
 
   final dio = Dio();
   dio.interceptors.add(CustomInterceptor());
 
   try {
     final response = await dio.post(
-      'https://03cc-119-202-37-52.ngrok-free.app/users/signIn/',
+      'https://pengy.dev/users/signIn/',
       options: Options(headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $idToken',
@@ -71,8 +72,7 @@ Future<void> checkUserInfoAndNavigate(User? user) async {
 
     if (response.statusCode == 200) {
       final responseBody = response.data;
-      print(response.data);
-      Get.to(HomeScreen());
+      Get.to(()=>HomeScreen());
     } else if (response.statusCode == 404) {
       Get.to(SignInNameInput());
     } else {

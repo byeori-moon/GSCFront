@@ -3,7 +3,15 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:camera_pj/controller/scan_controller.dart';
+import 'package:camera_pj/controller/space_controller.dart';
+import 'package:camera_pj/screen/information_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
+import 'package:get/get_core/src/get_main.dart';
+
+import '../component/token_manager.dart';
 
 List<Widget> displayBoxesAroundRecognizedObjects(
     Image image,
@@ -15,20 +23,20 @@ List<Widget> displayBoxesAroundRecognizedObjects(
     ) {
   if (yoloResults.isEmpty) return [];
 
-  double factorX = screen.width / imageWidth;
+  double factorX = screen.width / imageWidth /2;
   double factorY = screen.height / imageHeight / 2;
 
   Color colorPick = const Color.fromARGB(255, 50, 233, 30);
   return yoloResults.map((result) {
-    double left = result["box"][0] * factorX;
+    double left = result["box"][0] * factorX + 10;
     double top = result["box"][1] * factorY - 10;
-    double right = result["box"][2] * factorX + 25;
-    double bottom = result["box"][3] * factorY + 10;
-    double fontSize = (bottom - top); // 텍스트 길이가 박스 높이의 70%가 되도록 설정
+    double right = result["box"][2] * factorX + 40;
+    double bottom = result["box"][3] * factorY + 20;
+    double fontSize = (bottom - top) * 0.2; // 텍스트 길이가 박스 높이의 70%가 되도록 설정 텍스트 길이가 박스 높이의 70%가 되도록 설정
     double rleft = result["box"][0];
     double rtop = result["box"][1];
     double rright = result["box"][2];
-    double rbottom= result["box"][3];
+    double rbottom = result["box"][3];
 
     return Positioned(
       left: left,
@@ -39,7 +47,7 @@ List<Widget> displayBoxesAroundRecognizedObjects(
           print('Tag: ${result['tag']}');
         },
         child: Container(
-          width: right - left,
+          width: right - left + 10,
           height: bottom - top,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
@@ -64,9 +72,52 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     required this.imageHeight,
   });
 
+  void saveObject(int space,int hazard,var path,String name) async {
+    // TODO: 여기에 실제 저장 로직 구현
+
+    final dio = Dio(BaseOptions(
+      followRedirects: true,
+      maxRedirects: 5, // 최대 리디렉션 횟수
+    ));
+
+    final String? idToken = await TokenManager().getToken();
+    try {
+      FormData formData = FormData.fromMap({
+        'my_space': space,
+        'fire_hazard': hazard,
+        'thumbnail_image': await MultipartFile.fromFile(path),
+        'nickname': name,
+      });
+      final response = await dio.post(
+        'https://pengy.dev/api/spaces/hazards/',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        }),
+        data: formData,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('물체등록 성공: ${response.data}');
+
+        Get.to(InformationScreen(objectId: "$hazard", type: true));
+
+      } else {
+        print('물체등록 실패: ${response.data}');
+      }
+    } catch (e) {
+      print(path);
+      Get.to(InformationScreen(objectId: "$hazard",type: true));
+      print('물체등록 요청 중 오류 발생: $e');
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
 
     return Scaffold(
       body: Center(
@@ -105,34 +156,133 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
       String imagePath,
       BuildContext context,
       ) async {
-    // Calculate crop region
+    // 자르기 영역 계산
     int cropLeft = left.toInt();
-    int cropTop = top.toInt();
-    int cropWidth = (right - left).toInt();
-    int cropHeight = (bottom - top).toInt();
+    int cropTop = top.toInt() -10;
+    int cropWidth = (right - left).toInt() + 40;
+    int cropHeight = (bottom - top).toInt() + 40;
 
-    // Crop the image
-    File croppedImage = await cropImage(File(imagePath), cropLeft, cropTop, cropWidth, cropHeight);
+    // 이미지 자르기
+    File croppedImage = await cropImage(
+        File(imagePath), cropLeft, cropTop, cropWidth, cropHeight);
 
-    // Show the cropped image in modal
+    String? objectName = null;
+    final spaceController = Get.find<SpaceController>(); // 가정한 ScanController 가져오기
+    int selectedTag = spaceController.spaces[0].id; // 선택된 태그를 저장하는 변수
+
     showModalBottomSheet(
+
       context: context,
+      backgroundColor: Colors.white.withOpacity(0.5),
       builder: (BuildContext context) {
-        return Container(
-          width: double.infinity, // 모달 창의 가로폭을 화면 전체로 설정
-          height: double.infinity, // 모달 창의 세로높이를 화면 전체로 설정
-          child: Image.file(
-            croppedImage,
-            fit: BoxFit.cover,
-            scale: 5.0,// 이미지가 모달 창 전체를 채우도록 설정
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.8,
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: '이름',
+                          hintText: '이름을 입력하세요',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          objectName = value;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 10), // 간격 조절
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        decoration: InputDecoration(
+                          labelText: '태그 선택',
+                          labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        value: selectedTag,
+                        items: spaceController.spaces.map((space) {
+                          return DropdownMenuItem<int>(
+                            child: Text(space.spaceName),
+                            value: space.id,
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          // 선택된 태그 업데이트
+                          selectedTag = newValue!;
+                        },
+                      ),
+                    ),
+
+                  ],
+                ),
+                // 태그 표시
+                SizedBox(height: 10),
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(0.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.width * 0.5,
+                    child: Image.file(
+                      croppedImage,
+                      fit: BoxFit.cover,
+                      scale: 5.0,
+                    ),
+                  ),
+                ),
+                // 이름 입력란
+
+                SizedBox(height: 20),
+                // 예/아니오 버튼
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // 예를 누르면 정보를 저장하고 화면 이동
+                        print(objectName);
+                        print(selectedTag);
+                        String sendData = '';
+                        if (croppedImage != null) {
+                           sendData = croppedImage.path;
+                        }
+                        if(objectName!.isNotEmpty){
+                          saveObject(selectedTag,3,sendData,objectName!);
+                        }
+
+                        // saveObjectAndNavigate(objectName, objectTag);
+                      },
+                      child: Text('예'),
+                    ),
+                    SizedBox(width: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        // 아니요를 누르면 모달 닫기
+                        Navigator.pop(context);
+                      },
+                      child: Text('아니요'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
     );
-
   }
 
-  Future<File> cropImage(File imageFile, int left, int top, int width, int height) async {
+  Future<File> cropImage(
+      File imageFile, int left, int top, int width, int height) async {
     // Read the image
     Uint8List imageBytes = await imageFile.readAsBytes();
 
@@ -143,15 +293,23 @@ class DisplayDetectedObjectsScreen extends StatelessWidget {
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
     final paint = Paint()..isAntiAlias = true;
-    canvas.drawImageRect(originalImage, Rect.fromLTRB(left.toDouble(), top.toDouble(), (left + width).toDouble(), (top + height).toDouble()), Rect.fromLTRB(0, 0, width.toDouble(), height.toDouble()), paint);
+    canvas.drawImageRect(
+        originalImage,
+        Rect.fromLTRB(left.toDouble(), top.toDouble(),
+            (left + width).toDouble(), (top + height).toDouble()),
+        Rect.fromLTRB(0, 0, width.toDouble(), height.toDouble()),
+        paint);
     final croppedImage = await recorder.endRecording().toImage(width, height);
 
     // Save the cropped image to file
-    final croppedByteData = await croppedImage.toByteData(format: ui.ImageByteFormat.png);
+    final croppedByteData = await croppedImage.toByteData(
+        format: ui.ImageByteFormat.png);
     List<int> croppedBytes = croppedByteData!.buffer.asUint8List();
-    File croppedFile = File('${imageFile.path}_cropped.png');
+    File croppedFile =
+    File('${imageFile.path}');
     await croppedFile.writeAsBytes(croppedBytes);
 
     return croppedFile;
   }
+
 }

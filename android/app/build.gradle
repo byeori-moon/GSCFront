@@ -22,6 +22,8 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
+def googleMapApiKey = localProperties.getProperty('google.map.key')
+
 
 android {
     namespace "com.fire.fire"
@@ -50,6 +52,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders["googleMapApiKey"] = googleMapApiKey
+
     }
 
     buildTypes {
@@ -71,3 +75,4 @@ flutter {
 dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
 }
+

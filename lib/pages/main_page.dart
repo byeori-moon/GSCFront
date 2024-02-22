@@ -1,6 +1,5 @@
 import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
-import 'package:camera_pj/pages/map_page.dart';
 import 'package:camera_pj/screen/camera_screen.dart';
 import 'package:camera_pj/screen/search_place_screen.dart';
 import 'package:flutter/material.dart';
@@ -76,8 +75,8 @@ class MainPage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: SHADOW_BLUE,
-                        onPrimary: Colors.black.withOpacity(0.8),
-                        primary: MAINSCREEN_COLOR,
+                        foregroundColor: Colors.black.withOpacity(0.8),
+                        backgroundColor: MAINSCREEN_COLOR,
                         elevation: 3,
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
@@ -115,8 +114,8 @@ class MainPage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: SHADOW_BLUE,
-                        onPrimary: Colors.black.withOpacity(0.8),
-                        primary: MAINSCREEN_COLOR,
+                        foregroundColor: Colors.black.withOpacity(0.8),
+                        backgroundColor: MAINSCREEN_COLOR,
                         elevation: 3,
                         padding: EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(

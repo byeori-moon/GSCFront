@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../component/token_manager.dart';
 import '../screen/space_detail_screen.dart';
 
 class Space {
@@ -30,16 +31,16 @@ class Space {
   factory Space.fromJson(Map<String, dynamic> json) {
     SpaceCategoryType spaceCategoryType;
     switch (json['category']) {
-      case "집":
+      case 4:
         spaceCategoryType = SpaceCategoryType.house;
         break;
-      case "직장":
+      case 3:
         spaceCategoryType = SpaceCategoryType.office;
         break;
-      case "카페":
+      case 2:
         spaceCategoryType = SpaceCategoryType.cafe;
         break;
-      default:
+        default:
         spaceCategoryType = SpaceCategoryType.etc;
         break;
     }
@@ -54,48 +55,47 @@ class Space {
   }
 }
 
-Future<List<Space>> fetchMySpaces() async {
-  var dio = Dio();
-  final response = await dio.get('http://pengy.dev:8000/api/spaces/myspace');
-
-  if (response.statusCode == 200) {
-    List<dynamic> spacesJson = response.data;
-    return spacesJson.map((json) => Space.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load my spaces');
-  }
-}
-
 class SpaceController extends GetxController {
   var currentCategory = SpaceCategoryType.all.obs;
-  var data = [
-    {
-      "id": 3,
-      "FirebaseUID": 1,
-      "category": "카페",
-      "spaceName": "테스트카페",
-      "coordinates": "39.5665, 126.9780",
-      "address": "서울시 동작구 ..."
-    },
-    {
-      "id": 3,
-      "FirebaseUID": 1,
-      "category": "카페",
-      "spaceName": "테스트카페",
-      "coordinates": "37.5665, 126.9780",
-      "address": "서울시 동작구 ..."
-    }
-  ];
   var spaces = <Space>[].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    var fetchedData = data as List;
-    spaces.value = fetchedData.map((json) => Space.fromJson(json)).toList();
+  List<List<dynamic>> extractTagsAndIds(List<Space> spaces) {
+    List<List<dynamic>> tagsAndIds = [];
+    for (Space space in spaces) {
+      // Space 객체에서 tag와 id 추출하여 배열에 추가
+      String tag = space.spaceName;
+      int id = space.id;
+      tagsAndIds.add([tag, id]);
+    }
+    return tagsAndIds;
+  }
+
+  Future<List<Space>> fetchMySpaces() async {
+    var dio = Dio();
+    final idToken = await TokenManager().getToken();
+    final response = await dio.get(
+      'https://pengy.dev/api/spaces/myspace/',
+      options: Options(headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> spacesJson = response.data;
+      var fetchedSpaces =
+          spacesJson.map((json) => Space.fromJson(json)).toList();
+      spaces.assignAll(fetchedSpaces);
+      print("spc: ${spaces[0].id}");
+      return spacesJson.map((json) => Space.fromJson(json)).toList();
+    } else {
+      print("error");
+      throw Exception('Failed to load my spaces');
+    }
   }
 
   Set<Marker> getMarkers(BuildContext context) {
+    fetchMySpaces();
     return spaces.map((space) {
       var coords = space.coordinates.split(', ').map(double.parse).toList();
       return Marker(
@@ -104,12 +104,12 @@ class SpaceController extends GetxController {
         infoWindow: InfoWindow(
           title: space.spaceName,
           snippet: space.category == SpaceCategoryType.house
-              ? '집'
+              ? 'Home'
               : space.category == SpaceCategoryType.office
-                  ? '직장'
+                  ? 'Comp'
                   : space.category == SpaceCategoryType.cafe
-                      ? '카페'
-                      : '기타',
+                      ? 'Cafe'
+                      : 'etc',
         ),
         onTap: () {
           _showModalBottomSheet(context, space);
@@ -145,31 +145,41 @@ class SpaceController extends GetxController {
                     SizedBox(
                       width: 15,
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          space.spaceName,
-                          style: TextStyle(
-                            fontFamily: 'OHSQUARE',
-                            fontSize: 25,
-                            color: Color(0XFF272727),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            space.spaceName,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontFamily: 'OHSQUARE',
+                              fontSize: 25,
+                              color: Color(0XFF272727),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 7,
-                        ),
-                        Text(
-                          space.address,
-                          style: TextStyle(
-                            fontFamily: 'OHSQUAREAIR',
-                            fontSize: 16,
-                            color: Color(0XFF727272),
+                          SizedBox(
+                            height: 7,
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        )
-                      ],
+                          Text(
+                            space.address,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontFamily: 'OHSQUAREAIR',
+                              fontSize: 16,
+                              color: Color(0XFF727272),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -183,11 +193,12 @@ class SpaceController extends GetxController {
                 width: 160,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: BUTTON_BLUE,
-                      foregroundColor: BUTTON_WHITE,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(999),
-                      )),
+                    backgroundColor: BUTTON_BLUE,
+                    foregroundColor: BUTTON_WHITE,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -195,14 +206,11 @@ class SpaceController extends GetxController {
                         Icons.add,
                         size: 20,
                       ),
-                      SizedBox(
-                        width: 4,
-                      ),
                       Text(
-                        '장소 상세보기',
+                        'View details',
                         style: TextStyle(
                           fontFamily: 'OHSQUARE',
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -219,188 +227,210 @@ class SpaceController extends GetxController {
     );
   }
 
+
   void showMySpacesModal(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 1000,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 1000,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Column(
-                children: [
-                  Divider(
-                    thickness: 3,
-                    indent: 120,
-                    endIndent: 120,
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25.0, top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: SpaceCategoryType.values.map((category) {
-                        return SizedBox(
+            child: FutureBuilder<List<Space>>(
+              future: fetchMySpaces(),
+              builder: ((context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }else if (!snapshot.hasData) {
+                  return Text('No data available');
+                }
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Divider(
+                          thickness: 3,
+                          indent: 120,
+                          endIndent: 120,
                           height: 30,
-                          width: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: BUTTON_BLUE,
-                              padding: EdgeInsets.all(0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: BorderSide(
-                                  color: BUTTON_BLUE,
-                                  width: 1,
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              currentCategory.value = category;
-                            },
-                            child: Text(
-                              category == SpaceCategoryType.house
-                                  ? '집'
-                                  : category == SpaceCategoryType.office
-                                      ? '직장'
-                                      : category == SpaceCategoryType.cafe
-                                          ? '카페'
-                                          : category == SpaceCategoryType.etc
-                                              ? '기타'
-                                              : '전체',
-                              style: TextStyle(
-                                fontFamily: 'OHSQUARE',
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  Expanded(child: Obx(() {
-                    var filteredSpaces = currentCategory.value ==
-                            SpaceCategoryType.all
-                        ? spaces
-                        : spaces
-                            .where(
-                                (space) => space.category == currentCategory.value)
-                            .toList();
-
-                    return ListView.builder(
-                      itemCount: filteredSpaces.length,
-                      itemBuilder: (context, index) {
-                        Space space = filteredSpaces[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(() => SpaceDetailScreen(space: space));
-                          },
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 20.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SpaceCategoryIcon(
-                                        spaceCategoryType: space.category,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 25.0, top: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: SpaceCategoryType.values.map((category) {
+                              return SizedBox(
+                                height: 30,
+                                width: 50,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: BUTTON_BLUE,
+                                    padding: EdgeInsets.all(0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                        color: BUTTON_BLUE,
+                                        width: 1,
                                       ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            space.spaceName,
-                                            style: TextStyle(
-                                              fontFamily: 'OHSQUARE',
-                                              fontSize: 25,
-                                              color: Color(0XFF272727),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 7,
-                                          ),
-                                          Text(
-                                            space.address,
-                                            style: TextStyle(
-                                              fontFamily: 'OHSQUAREAIR',
-                                              fontSize: 16,
-                                              color: Color(0XFF727272),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          )
-                                        ],
-                                      ),
-                                    ],
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    currentCategory.value = category;
+                                  },
+                                  child: Text(
+                                    category == SpaceCategoryType.house
+                                        ? 'Home'
+                                        : category == SpaceCategoryType.office
+                                            ? 'Comp'
+                                            : category == SpaceCategoryType.cafe
+                                                ? 'Cafe'
+                                                : category ==
+                                                        SpaceCategoryType.etc
+                                                    ? 'Etc'
+                                                    : 'All',
+                                    style: TextStyle(
+                                      fontFamily: 'OHSQUARE',
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Divider(),
-                                ),
-                              ]),
-                        );
-                      },
-                    );
-                  }))
-                ],
-              ),
-              Positioned(
-                bottom: 22,
-                child: SizedBox(
-                  height: 50,
-                  width: 130,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: BUTTON_BLUE,
-                        foregroundColor: BUTTON_WHITE,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(999),
-                        )),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.room,
-                          size: 20,
-                        ),
-                        SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          '지도보기',
-                          style: TextStyle(
-                            fontFamily: 'OHSQUARE',
-                            fontSize: 16,
+                              );
+                            }).toList(),
                           ),
                         ),
+                        Expanded(child: Obx(() {
+                          var filteredSpaces = currentCategory.value ==
+                                  SpaceCategoryType.all
+                              ? spaces
+                              : spaces
+                                  .where((space) =>
+                                      space.category == currentCategory.value)
+                                  .toList();
+
+                          return ListView.builder(
+                            itemCount: filteredSpaces.length,
+                            itemBuilder: (context, index) {
+                              Space space = filteredSpaces[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(() => SpaceDetailScreen(space: space));
+                                },
+
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            SpaceCategoryIcon(
+                                              spaceCategoryType: space.category,
+                                            ),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  space.spaceName,
+                                                  style: TextStyle(
+                                                    fontFamily: 'OHSQUARE',
+                                                    fontSize: 25,
+                                                    color: Color(0XFF272727),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 7,
+                                                ),
+                                                Text(
+                                                  space.address,
+                                                  overflow: TextOverflow.fade,
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  style: TextStyle(
+                                                    fontFamily: 'OHSQUAREAIR',
+                                                    fontSize: 16,
+                                                    color: Color(0XFF727272),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                )
+                                              ],
+                                            ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Divider(),
+                                      ),
+                                    ]),
+                              );
+                            },
+                          );
+                        }))
                       ],
                     ),
-                    onPressed: () {
-                      Get.to(() => MapScreen());
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+                    Positioned(
+                      bottom: 22,
+                      child: SizedBox(
+                        height: 50,
+                        width: 150,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: BUTTON_BLUE,
+                              foregroundColor: BUTTON_WHITE,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(999),
+                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.room,
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                'View map',
+                                style: TextStyle(
+                                  fontFamily: 'OHSQUARE',
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: () {
+                            Get.to(() => MapScreen());
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ),
+          );
+        });
   }
 }
 
@@ -437,12 +467,12 @@ class SpaceCategoryIcon extends StatelessWidget {
         ),
         Text(
           spaceCategoryType == SpaceCategoryType.house
-              ? '집'
+              ? 'Home'
               : spaceCategoryType == SpaceCategoryType.office
-                  ? '직장'
+                  ? 'Comp'
                   : spaceCategoryType == SpaceCategoryType.cafe
-                      ? '카페'
-                      : '기타',
+                      ? 'Cafe'
+                      : 'Etc',
           style: TextStyle(
             fontFamily: 'OHSQUAREAIR',
             fontSize: 15,

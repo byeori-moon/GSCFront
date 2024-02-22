@@ -1,5 +1,6 @@
 import 'package:camera_pj/constant/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
@@ -8,6 +9,7 @@ import 'save_my_place_screen.dart';
 import 'package:dio/dio.dart';
 
 class SearchPlaceScreen extends StatefulWidget {
+
   @override
   _SearchPlaceScreenState createState() => _SearchPlaceScreenState();
 }
@@ -16,7 +18,7 @@ class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
   final AddressController addressController = Get.put(AddressController());
   final TextEditingController _controller = TextEditingController();
   final Dio _dio = Dio();
-  final String _apiKey = 'AIzaSyDvknbRB4ohfTWz-R3aEDBAePlsOfIpkP0';
+  final String? _apiKey = dotenv.env['MAP_KEY'];
   List<dynamic> _autocompletePlaces = [];
   GoogleMapController? _mapController;
   LatLng? _selectedPosition;
@@ -138,7 +140,7 @@ class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
       backgroundColor: BACKGROUND_COLOR,
       appBar: AppBar(
         title: Text(
-          '내장소 등록하기',
+          'Register My Location',
           style: TextStyle(fontFamily: 'OHSQUAREAIR'),
         ),
         backgroundColor: BACKGROUND_COLOR,
@@ -156,7 +158,7 @@ class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
-                  labelText: '내장소 검색',
+                  labelText: 'Search My Location',
                   labelStyle: TextStyle(fontFamily: 'OHSQUAREAIR'),
                   suffixIcon: Icon(Icons.search),
                   border: InputBorder.none,
@@ -222,13 +224,13 @@ class _SearchPlaceScreenState extends State<SearchPlaceScreen> {
                     children: [
                       Icon(
                         Icons.check,
-                        size: 20,
+                          size: 20,
                       ),
                       SizedBox(
                         width: 4,
                       ),
                       Text(
-                        '이 위치로 선택하기',
+                        'Select',
                         style: TextStyle(
                           fontFamily: 'OHSQUARE',
                           fontSize: 16,
