@@ -17,7 +17,7 @@ During this process, we identify objects that pose a fire hazard for placement. 
 
 ## Getting Started
 
-Click to download a releaed apk. To install this, you need to able downloading an app from unknown sources.
+[Click to download a releaed apk](https://github.com/GDSC-CAU/Pengy-FE/releases/download/Pengy-v0.1/app-release.apk). To install this, you need to able downloading an app from unknown sources.
 
 or
 
