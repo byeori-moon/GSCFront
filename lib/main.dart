@@ -31,7 +31,7 @@ void main() async {
         fontFamily: 'OHSQUAREAIR'
       ),
 
-      home: CameraView(),
+      home: LoginScreen(),
     ),
   );
 }
