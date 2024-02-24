@@ -19,5 +19,17 @@ During this process, we identify objects that pose a fire hazard for placement. 
 
 Click to download a releaed apk. To install this, you need to able downloading an app from unknown sources.
 
+or
 
+using flutter
+1. Clone this project
+2. Set .env in root project
+```bash
+  MAP_KEY=*Put your Google Maps API KEY*
+```
+3. Set local.properties in root project/android/local.properties
+```bash
+  google.map.key=*Put your Google Maps API KEY*
+```
+4. Run with Android Studio
 
