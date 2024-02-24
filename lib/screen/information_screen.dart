@@ -331,7 +331,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                       style: TextStyle(color: Colors.black),
                                       children: <TextSpan>[
                                         TextSpan(
-                                            text: '제목: \n',
+                                            text: 'title: \n',
                                             style: TextStyle(
                                                 fontFamily: 'OHSQUARE',
                                                 fontSize: 16)),
@@ -343,7 +343,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                                 fontSize: 15,
                                                 height: 1.5)),
                                         TextSpan(
-                                            text: '저자: \n',
+                                            text: 'author: \n',
                                             style: TextStyle(
                                                 fontFamily: 'OHSQUARE',
                                                 fontSize: 16)),
@@ -355,7 +355,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                                 fontSize: 15,
                                                 height: 1.5)),
                                         TextSpan(
-                                            text: '출판년도: \n',
+                                            text: 'year: \n',
                                             style: TextStyle(
                                                 fontFamily: 'OHSQUARE',
                                                 fontSize: 16)),
@@ -367,7 +367,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                                 fontSize: 15,
                                                 height: 1.5)),
                                         TextSpan(
-                                            text: '출판지: \n',
+                                            text: 'publisher: \n',
                                             style: TextStyle(
                                                 fontFamily: 'OHSQUARE',
                                                 fontSize: 16)),
@@ -379,7 +379,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                                 fontSize: 15,
                                                 height: 1.5)),
                                         TextSpan(
-                                            text: '요약: \n',
+                                            text: 'summary: \n',
                                             style: TextStyle(
                                                 fontFamily: 'OHSQUARE',
                                                 fontSize: 16)),
@@ -391,7 +391,7 @@ class _InformationScreenState extends State<InformationScreen> {
                                                 fontSize: 15,
                                                 height: 1.5)),
                                         TextSpan(
-                                          text: '이곳을 클릭해서 논문 보기',
+                                          text: 'click to see paper',
                                           style: TextStyle(
                                             color: BUTTON_BLUE,
                                             decoration:
