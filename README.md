@@ -31,5 +31,6 @@ using flutter
 ```bash
   google.map.key=*Put your Google Maps API KEY*
 ```
-4. Run with Android Studio
+4. Set google-services.json using backend repo in root project/android/app
+5. Run with Android Studio
 
