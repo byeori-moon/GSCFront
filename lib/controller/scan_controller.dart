@@ -25,11 +25,11 @@ class ScanController extends GetxController {
   var imageHeight = RxInt(0);
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
+    await initCamera();
+    await initTFLite();
     super.onInit();
     setObjectDetectionInProgress(false);
-    initCamera();
-    initTFLite();
   }
 
   @override
@@ -51,6 +51,9 @@ class ScanController extends GetxController {
           imageWidth.value = image.width;
           imageHeight.value = image.height;
           objectDetection(image);
+          print(imageWidth.value);
+          print(imageHeight.value);
+
         });
         isCameraInitialized(true);
         update();
@@ -63,16 +66,16 @@ class ScanController extends GetxController {
   initTFLite() async {
     await vision.loadYoloModel(
       labels: 'asset/labels1.txt',
-      modelPath: 'asset/best_float16.tflite',
+      modelPath: 'asset/best_float32.tflite',
       modelVersion: "yolov8",
       quantization: false,
       numThreads: 2,
       useGpu: false,
     );
-  }
 
+  }
   objectDetection(CameraImage image) async {
-    if (objectDetectionInProgress.value==true) return;
+    if (objectDetectionInProgress.value == true) return;
 
     final result = await vision.yoloOnFrame(
       bytesList: image.planes.map((plane) => plane.bytes).toList(),
@@ -83,12 +86,22 @@ class ScanController extends GetxController {
       classThreshold: 0.5,
     );
 
-
     if (result.isNotEmpty) {
-      detectedObjects.value = result;
-      // print("h:${image.height} w:${image.width}");
-      //print(detectedObjects);
-      update();
+      List<Map<String, dynamic>> filteredObjects = [];
+      for (var obj in result) {
+        if (obj["tag"] == "refrigerator" ||
+            obj["tag"] == "air conditioner" ||
+            obj["tag"] == "power soket" ||
+            obj["tag"] == "gas_stove" ||
+            obj["tag"] == "washing machine" ||
+            obj["tag"] == "wood boiler"
+        ) {
+          // 인식된 오브젝트의 태그가 원하는 값들 중 하나와 일치하는 경우에만 detectedObjects에 추가
+          filteredObjects.add(obj);
+        }
+        detectedObjects.value = filteredObjects;
+        update();
+      }
     }
   }
   objectDetectionImage(File imageFile) async {
@@ -108,8 +121,10 @@ class ScanController extends GetxController {
         classThreshold: 0.5,
       );
       if (result.isNotEmpty) {
+
         detectedObjects.value = result;
-        //print("1:${detectedObjects}");
+        //print("x:${detectedObjects}");
+        print("1:${detectedObjects}");
         update();
       }
     }

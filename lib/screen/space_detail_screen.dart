@@ -15,7 +15,7 @@ class SpaceDetailScreen extends StatelessWidget {
 
   SpaceDetailScreen({Key? key, required this.space}) : super(key: key);
   final SpaceObjectController spaceObjectController =
-      Get.put(SpaceObjectController());
+  Get.put(SpaceObjectController());
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class SpaceDetailScreen extends StatelessWidget {
                     ),
                   ),
                   DefaultButton(
-                      buttonText: '안전 조언',
+                      buttonText: 'Advice',
                       onPressed: () async {
                         Future<String> fetchAdvice(int spaceId) async {
                           final Dio dio = Dio();
@@ -85,11 +85,14 @@ class SpaceDetailScreen extends StatelessWidget {
                               'Authorization': 'Bearer $idToken',
                             }),
                           );
-                          if (response.statusCode == 200) {
+                          print(1);
+                          if (response.statusCode == 200 ||response.statusCode == 404) {
                             final jsonResponse = response.data;
                             print(response.data);
                             return jsonResponse['fire_prevention_tips'];
-                          } else {
+                          }
+                          else {
+                            print(response.statusCode);
                             throw Exception('Failed to load advice');
                           }
                         }
@@ -99,31 +102,24 @@ class SpaceDetailScreen extends StatelessWidget {
                             backgroundColor: Colors.white,
                             context: context,
                             builder: (BuildContext context) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              }
-                              return Expanded(
-                                child: FutureBuilder<String>(
-                                  future: fetchAdvice(
-                                      space.id),
-                                  builder: (context,snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Center(child: CircularProgressIndicator());
-                                    } else if (snapshot.hasError) {
-                                      return Center(child: Text('Error: ${snapshot.error}'));
-                                    }else if (!snapshot.hasData) {
-                                      return Text('No data available');
-                                    }
-                                    return SingleChildScrollView(
-                                      child: Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Text(snapshot.data!,
-                                            overflow: TextOverflow.visible),
-                                      ),
-                                    );
-                                  }
+                              return SingleChildScrollView(
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: FutureBuilder<String>(
+                                    future: fetchAdvice(space.id),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Center(child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(child: Text('Error: ${snapshot.error}'));
+                                      } else if (!snapshot.hasData) {
+                                        return Text('No data available');
+                                      }
+                                      return Text(snapshot.data!,
+                                        overflow: TextOverflow.visible,
+                                      );
+                                    },
+                                  ),
                                 ),
                               );
                             },
