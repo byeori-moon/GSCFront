@@ -17,7 +17,6 @@ import 'controller/space_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");	// 추가
   await Firebase.initializeApp();
   Get.put(AccountController());
   Get.put(SpaceController());
