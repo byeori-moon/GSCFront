@@ -55,6 +55,9 @@ using flutter
 [click to redirect to AI repository](https://github.com/GDSC-CAU/Pengy-AI).
 This is a repository containing Jupyter notebooks used for training AI.
 
+## Used open source
+https://github.com/scholarly-python-package/scholarly
+
 ## Team
 |Janghyeon Park (Leader)|Sunbin Do|Byeori Moon|Junhyung Park|
 |:---:|:---:|:---:|:---:|
