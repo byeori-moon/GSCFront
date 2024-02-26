@@ -68,7 +68,7 @@ Key features:
 7. Safety checklist per a space
 
 ## How to run
-**Front-End**
+[**Front-End**]
 [Click to download a releaed apk](https://github.com/GDSC-CAU/Pengy-FE/releases/download/Pengy-v0.1/app-release.apk). To install this, you need to able downloading an app from unknown sources.
 
 or
@@ -107,13 +107,38 @@ using flutter
 
 [**AI**]
 [click to redirect to AI repository](https://github.com/GDSC-CAU/Pengy-AI).
-This is a repository containing Jupyter notebooks used for training AI.
+1. Clone this project
+```bash
+    git clone https://github.com/GDSC-CAU/Pengy-AI.git
+```
+2. Create a Python virtual environmen
+```bash
+    python -m venv venv
+    ./venv/scripts/activate
+```
+3. Install dependencies
+```bash
+    pip install -r requirements.txt
+```
+4. if you wanna train your model, refer to jupyter
+``` bash
+    cd jupyter
+```
+5. for object detection with webcam
+``` bash
+    python detect.py your.model
+```
+6. export your model to tflite
+``` bash
+    python export.py your.model tflite
+```
 
 ## System Architecture
 <img width="1856" alt="시스템아키텍쳐" src="https://github.com/GDSC-CAU/Pengy-FE/assets/63183021/c07a23d6-5448-4fef-80e0-17d4d1615d8a">
 
 ## Used open source
-https://github.com/scholarly-python-package/scholarly
+`yolo v8:`
+https://github.com/ultralytics/ultralytics
 
 ## Google Products
 * Flutter
@@ -130,4 +155,3 @@ https://github.com/scholarly-python-package/scholarly
 |:---:|:---:|:---:|:---:|
 |Back-End/AI|	AI/Back-End|Front-End/Design|Front-End/AI|
 |[park-janghyeon](https://github.com/park-janghyeon)|[typingmistake](https://github.com/typingmistake)|[byeori-moon](https://github.com/byeori-moon)|[DogJHDOG](https://github.com/DogJHDOG/)|
-
