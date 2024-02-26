@@ -139,6 +139,7 @@ using flutter
 ## Used open source
 `yolo v8:`
 https://github.com/ultralytics/ultralytics
+https://github.com/scholarly-python-package/scholarly
 
 ## Google Products
 * Flutter
