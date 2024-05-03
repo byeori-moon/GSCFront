@@ -50,8 +50,7 @@ class _InformationScreenState extends State<InformationScreen> {
                     return Text('Error: ${snapshot.error}');
                   }
                   final _loadedData=snapshot.data;
-                  List<String> lines =
-                      _loadedData!.fireSafetyInstructions.split('\n');
+
                   final YoutubePlayerController _con = YoutubePlayerController(
                     initialVideoId: _loadedData!.youtubeVideoLinks,
                     flags: const YoutubePlayerFlags(
@@ -236,52 +235,52 @@ class _InformationScreenState extends State<InformationScreen> {
                                 ],
                               ),
                             ),
-                            ListTile(
-                              title: Text(
-                                '❗The Safety Method',
-                                style: TextStyle(
-                                    fontFamily: 'OHSQUARE',
-                                    fontSize: 22,
-                                    color: BUTTON_BLUE),
-                              ),
-                              subtitle: Text(
-                                'Attention',
-                                style: TextStyle(
-                                    fontFamily: 'OHSQUAREAIR',
-                                    fontSize: 14,
-                                    color: BUTTON_BLUE),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(20),
-                              margin: EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: SHADOW_BLUE,
-                                    blurRadius: 4,
-                                    offset: Offset(2, 2), // 그림자의 방향
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: lines
-                                    .map((line) => Column(
-                                          children: [
-                                            Text(
-                                              line,
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontFamily: 'OHSQUAREAIR'),
-                                            ),
-                                            if (line != lines.last) Divider(),
-                                          ],
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
+                            // ListTile(
+                            //   title: Text(
+                            //     '❗The Safety Method',
+                            //     style: TextStyle(
+                            //         fontFamily: 'OHSQUARE',
+                            //         fontSize: 22,
+                            //         color: BUTTON_BLUE),
+                            //   ),
+                            //   subtitle: Text(
+                            //     'Attention',
+                            //     style: TextStyle(
+                            //         fontFamily: 'OHSQUAREAIR',
+                            //         fontSize: 14,
+                            //         color: BUTTON_BLUE),
+                            //   ),
+                            // ),
+                            // Container(
+                            //   padding: EdgeInsets.all(20),
+                            //   margin: EdgeInsets.all(4),
+                            //   decoration: BoxDecoration(
+                            //     color: Colors.white,
+                            //     borderRadius: BorderRadius.circular(20),
+                            //     boxShadow: [
+                            //       BoxShadow(
+                            //         color: SHADOW_BLUE,
+                            //         blurRadius: 4,
+                            //         offset: Offset(2, 2), // 그림자의 방향
+                            //       ),
+                            //     ],
+                            //   ),
+                            //   child: Column(
+                            //     children: lines
+                            //         .map((line) => Column(
+                            //               children: [
+                            //                 Text(
+                            //                   line,
+                            //                   style: TextStyle(
+                            //                       fontSize: 16.0,
+                            //                       fontFamily: 'OHSQUAREAIR'),
+                            //                 ),
+                            //                 if (line != lines.last) Divider(),
+                            //               ],
+                            //             ))
+                            //         .toList(),
+                            //   ),
+                            // ),
                             ListTile(
                               title: Text(
                                 '📺 Youtube Videos',

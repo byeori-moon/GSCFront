@@ -18,6 +18,7 @@ class Space {
   final String spaceName;
   final String coordinates;
   final String address;
+  final int average_temperature;
 
   Space({
     required this.id,
@@ -26,6 +27,8 @@ class Space {
     required this.spaceName,
     required this.coordinates,
     required this.address,
+    required this.average_temperature,
+
   });
 
   factory Space.fromJson(Map<String, dynamic> json) {
@@ -51,6 +54,7 @@ class Space {
       spaceName: json['spaceName'],
       coordinates: json['coordinates'],
       address: json['address'],
+        average_temperature:json['average_temperature'],
     );
   }
 }

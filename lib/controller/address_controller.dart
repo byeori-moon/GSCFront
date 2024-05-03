@@ -25,21 +25,10 @@ class AddressController extends GetxController {
   }
 
   void savePlace(String nickname, String coordinates,String address,int category) async {
-    // TODO: 여기에 실제 저장 로직 구현
-    print(address);
-    print(coordinates);
-    print(category);
-    final dio = Dio(BaseOptions(
-      followRedirects: true,
-      maxRedirects: 1, // 최대 리디렉션 횟수
-    ));
-
+    final dio=Dio();
 
     try {
     final idToken = await TokenManager().getToken();
-
-
-
     // FormData 생성
     print(idToken);
 
