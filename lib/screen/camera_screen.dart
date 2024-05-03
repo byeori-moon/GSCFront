@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
 import 'package:camera_pj/screen/ai_safty_screen.dart';
+import 'package:camera_pj/screen/register_capture_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -137,11 +138,17 @@ class CameraView extends StatelessWidget {
                       //   ),
                       // );
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) =>
-                              AuInformationScreen()
-                          )
+                        context, MaterialPageRoute(
+                          builder: (context)=>
+                              RegisterCaptureScreen(image: image!.path)
+                        )
                       );
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(builder: (context) =>
+                      //         AuInformationScreen()
+                      //     )
+                      // );
                     } else {
                       print('Failed to take picture');
                     }

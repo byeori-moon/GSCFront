@@ -178,9 +178,9 @@ class ScanController extends GetxController {
       // 이미지를 캡처합니다.
       XFile picture = await cameraController.takePicture();
       //   objectDetectionImage(picture as File);
-      //objectWithVisionPro(picture);
+      // objectWithVisionPro(picture);
       // 캡처한 이미지의 경로를 반환합니다.
-
+      print(11);
       return picture;
     } catch (e) {
       print("Error capturing picture: $e");
