@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
+import 'package:camera_pj/screen/ai_safty_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -123,17 +124,23 @@ class CameraView extends StatelessWidget {
                     print("image: ${image?.path}");
                     print("content: $content");
                     if (image?.path != null) {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         DisplayDetectedObjectsScreen(
+                      //           image: image!.path,
+                      //           detectedObjects: controller.detectedObjects,
+                      //           imageHeight: controller.imageHeight.value,
+                      //           imageWidth: controller.imageWidth.value,
+                      //         ),
+                      //   ),
+                      // );
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              DisplayDetectedObjectsScreen(
-                                image: image!.path,
-                                detectedObjects: controller.detectedObjects,
-                                imageHeight: controller.imageHeight.value,
-                                imageWidth: controller.imageWidth.value,
-                              ),
-                        ),
+                          context,
+                          MaterialPageRoute(builder: (context) =>
+                              AuInformationScreen()
+                          )
                       );
                     } else {
                       print('Failed to take picture');

@@ -26,13 +26,13 @@ class AddressController extends GetxController {
 
   void savePlace(String nickname, String coordinates,String address,int category) async {
     // TODO: 여기에 실제 저장 로직 구현
-    print(address);
-    print(coordinates);
+
     print(category);
-    final dio = Dio(BaseOptions(
-      followRedirects: true,
-      maxRedirects: 1, // 최대 리디렉션 횟수
-    ));
+    print(nickname);
+    print(coordinates);
+    print(address);
+
+    final dio = Dio();
 
 
     try {
@@ -44,8 +44,9 @@ class AddressController extends GetxController {
     print(idToken);
 
     if (idToken != null) {
+      dio.interceptors.add(CustomInterceptor());
         final response = await dio.post(
-          'http://pengy.dev/api/spaces/myspace/create',
+          'https://pengy.dev/api/spaces/myspace/create',
           options: Options(headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $idToken',

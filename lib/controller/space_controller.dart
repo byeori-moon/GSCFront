@@ -31,19 +31,26 @@ class Space {
   factory Space.fromJson(Map<String, dynamic> json) {
     SpaceCategoryType spaceCategoryType;
     switch (json['category']) {
-      case 4:
+      case 1:
         spaceCategoryType = SpaceCategoryType.house;
         break;
-      case 3:
+      case 2:
         spaceCategoryType = SpaceCategoryType.office;
         break;
-      case 2:
+      case 3:
         spaceCategoryType = SpaceCategoryType.cafe;
         break;
       default:
         spaceCategoryType = SpaceCategoryType.etc;
         break;
     }
+    print( json['id']);
+    print( json['FirebaseUID']);
+    print(spaceCategoryType);
+    print( json['spaceName']);
+    print( json['coordinates']);
+    print(json['address']);
+
     return Space(
       id: json['id'],
       firebaseUID: json['FirebaseUID'],
@@ -80,14 +87,15 @@ class SpaceController extends GetxController {
         'Authorization': 'Bearer $idToken',
       }),
     );
-
+    print("fetchMySpaces");
     if (response.statusCode == 200) {
       List<dynamic> spacesJson = response.data;
+      print(spacesJson);
       var fetchedSpaces =
       spacesJson.map((json) => Space.fromJson(json)).toList();
       spaces.assignAll(fetchedSpaces);
       print("spc: ${spaces[0].id}");
-      return spacesJson.map((json) => Space.fromJson(json)).toList();
+      return fetchedSpaces; // 수정
     } else {
       print("error");
       throw Exception('Failed to load my spaces');

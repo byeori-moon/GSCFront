@@ -1,11 +1,10 @@
 
 import 'package:camera_pj/controller/scan_controller.dart';
+import 'package:camera_pj/screen/loading_quiz_screen.dart';
 import 'package:camera_pj/screen/quiz_main_screen.dart';
+import 'package:camera_pj/screen/safty_information_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'loading_quiz_screen.dart';
-import 'safty_information_screen.dart';
 
 class AuInformationScreen extends StatefulWidget {
   const AuInformationScreen({super.key});
