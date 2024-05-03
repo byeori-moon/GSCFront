@@ -2,10 +2,12 @@ import 'package:camera_pj/component/button_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/screen/information_screen.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../component/temperature_component.dart';
 import '../component/token_manager.dart';
 import '../controller/space_controller.dart';
 import '../controller/space_object_controller.dart';
@@ -35,8 +37,28 @@ class SpaceDetailScreen extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               }
+              print(spaceObjectController.spaceDetails.length.toString());
               return Column(
                 children: [
+                  Row(
+                    children: [
+                      Expanded(child: SizedBox()),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(children: [
+                            SizedBox(child: Image.asset('asset/img/thermometer.gif',),width: 50,height: 50,),
+                            SizedBox(width: 10,),
+                            Text('${space.average_temperature}`C',style: TextStyle(fontSize: 15),),
+                          ],),
+                        ),
+                      ),
+                    ],
+                  ),
                   Expanded(
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -46,11 +68,16 @@ class SpaceDetailScreen extends StatelessWidget {
                       itemCount: spaceObjectController.spaceDetails.length,
                       itemBuilder: (context, index) {
                         SpaceDetail spaceDetail = spaceObjectController.spaceDetails[index];
+                        print(spaceDetail.id);
+                        print(spaceDetail.thumbnailImage);
+                        print(spaceDetail.mySpace);
+                        print(spaceDetail.nickname);
                         return GestureDetector(
                           onTap: () {
                             // 클릭 이벤트 처리
                             // 예: 상세 페이지로 이동
-                            Get.to(() => InformationScreen(objectId: '${spaceDetail.fireHazard}',type: false));
+                            // Get.to(() => InformationScreen(objectId: '${spaceDetail.fireHazard}',type: false));
+                            showDetailModal(context, spaceDetail.id);
                           },
                           child: Card(
                             color: DEFAULT_YELLOW,
@@ -136,4 +163,62 @@ class SpaceDetailScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void showDetailModal(BuildContext context, int id) {
+  final SpaceObjectController spaceObjectController = Get.find();
+
+  showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 300),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return SlideTransition(
+          position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).animate(animation),
+          child: child,
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return FutureBuilder<List<UserFireHazard>>(
+          future: spaceObjectController.fetchFireHazardDetails(id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              return Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 300,
+                  height: double.infinity,
+                  child: Material(
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        UserFireHazard hazard = snapshot.data![index];
+                        return ListTile(
+                          title: Text("ID: ${hazard.fireHazard.id} - ${hazard.fireHazard.object}"),
+                          subtitle: Text("Checked: ${hazard.isChecked ? 'Yes' : 'No'}"),
+                          trailing: IconButton(
+                            icon: Icon(Icons.arrow_forward),
+                            onPressed: () {
+                              Get.to(() => InformationScreen(objectId: '${hazard.fireHazard.id}', type: false));
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return Text("No data available");
+            }
+          },
+        );
+      }
+  );
 }

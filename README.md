@@ -1,23 +1,159 @@
 # PENGY
 
-icon
+<img width="50%" src="https://github.com/GDSC-CAU/Pengy-FE/assets/100814191/8c5541e2-5338-432a-b7b5-b474b9207dbf"/>
 
 ## UN's Sustainable Development 
-### Goal 11. Sustainable Cities and Communities
+Goal 11. Sustainable Cities and Communities
 
-### Solution
-In modern society, many fire-related issues arise due to ignorance and carelessness. Our app aims to address these problems by introducing a highly unique approach to space management.
+## Problem
+1. Not Paying Attention to Fire Risks: A lot of people don’t realize how everyday actions and oversights can lead to serious fire hazards. Things like plugging too many devices into one outlet, not storing things safely, or forgetting to check if fire safety gear works properly are common mistakes. Many think, "A fire won’t happen to me," and end up ignoring basic safety steps.
 
-To tackle this issue, we have structured the app around managing one's space. The main functionality of the app is to construct one's space and place various objects within it.
+2. Rethinking Fire Safety Education: The current approach to fire safety education often delivers information that is not directly applicable to the specific environments in which we live or work. This lack of personalized and relevant content makes it difficult for individuals to truly grasp the importance of fire safety or to envision how to implement these practices in their daily lives. To address this issue, there's a pressing need to shift from a one-size-fits-all method of instruction to a more interactive and engaging educational model. 
 
-During this process, we identify objects that pose a fire hazard for placement. Through this, users must use the camera to identify and register objects with fire hazards while constructing their space. In doing so, users become aware of fire-hazardous objects and receive information about the various problems associated with them and their solutions. Based on the provided solutions, users' perception shifts from ignorance to awareness and preparedness.
-  
-## Screen
+3. Not Looking for Information on Fire Safety: People generally don’t make an effort to learn fire safety knowledge by their own will. Since many think a fire is unlikely to happen to them, they don’t see the point in spending time on this topic. Even when helpful tips and information are easy to find, they're often ignored. This attitude stops important safety information from getting to the people who need it most and makes them less prepared for fire risks around them.
 
+## Solution
+Our Solution addresses the issue of underestimating fire risks due to a lack of fire safety awareness and preparedness. By transforming the perception of fire from a distant to a daily concern, we aim to heighten awareness of fire hazards and provide knowledge for appropriate responses.
 
-## Getting Started
+Key features:
+1. Camera-based Detection of nearby fire hazards (top 7 items that started the fire the most; data from the National Fire Information System as of last year).
+<table>
+<tr>
+    <th>Object</th>
+    <th>Image</th>
+    <th>Fire Incidents</th>
+</tr>
+<tr>
+    <td>Gas Stove</td>
+    <td><img src="https://images.unsplash.com/photo-1607324772107-8ad6740ca195?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>879</td>
+</tr>
+<tr>
+    <td>Outlet</td>
+    <td><img src="https://images.unsplash.com/photo-1565049981953-379c9c2a5d48?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oy1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>796</td>
+</tr>
+<tr>
+    <td>Refrigerator</td>
+    <td><img src="https://images.unsplash.com/photo-1597502321303-ac7965ad7e8e?q=80&w=2093&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oy1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>459</td>
+</tr>
+<tr>
+    <td>Air Conditioner</td>
+    <td><img src="https://plus.unsplash.com/premium_photo-1679943423706-570c6462f9a4?q=80&w=2010&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oy1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>292</td>
+</tr>
+<tr>
+    <td>LED Lighting</td>
+    <td><img src="https://images.unsplash.com/photo-1563099045-dd7d9aebaa49?q=80&w=2096&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oy1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>283</td>
+</tr>
+<tr>
+    <td>Wood Boiler</td>
+    <td><img src="https://images.unsplash.com/photo-1554332208-9dfebcc48334?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oy1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>244</td>
+</tr>
+<tr>
+    <td>Washing Machine</td>
+    <td><img src="https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90oy1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" width="250" height="250"></td>
+    <td>159</td>
+</tr>
+</table>
 
-Click to download a releaed apk. To install this, you need to able downloading an app from unknown sources.
+2. Management of Fire Hazards in personal spaces.
+3. Fire Safety Education through diverse content including news, youtube video, fire prevention tip, thesis. These contents are semi-automatically generated with crawling and open-source API. 
+4. Customized Advice for fire management tailored to specific spaces (generated by Gemini).
+5. Daily Fire Safety Tips via push notifications (Firebase cloud messaging).
+6. Fire Safety Quizzes to test and improve knowledge.
+7. Safety checklist per a space
 
+## How to run
+[**Front-End**]
+[Click to download a releaed apk](https://github.com/GDSC-CAU/Pengy-FE/releases/download/Pengy-v0.1/app-release.apk). To install this, you need to able downloading an app from unknown sources.
 
+or
 
+using flutter
+1. Clone this project
+```bash
+    git clone https://github.com/GDSC-CAU/Pengy-FE.git
+```
+2. Set .env in root project
+```bash
+  MAP_KEY=*Put your Google Maps API KEY*
+```
+3. Set local.properties in root project/android/local.properties
+```bash
+  google.map.key=*Put your Google Maps API KEY*
+```
+4. Run with Android Studio
+
+[**Back-End**]
+[click to redirect to Back-End repository](https://github.com/GDSC-CAU/Pengy-BE).
+1. Clone this project
+```bash
+    git clone https://github.com/GDSC-CAU/Pengy-BE.git
+```
+2. Create a Python virtual environmen
+```bash
+    python -m venv venv
+    ./venv/scripts/activate
+```
+3. Install dependencies and start the server.
+```bash
+    pip install -r requirements.txt
+    python manage.py runserver
+```
+
+[**AI**]
+[click to redirect to AI repository](https://github.com/GDSC-CAU/Pengy-AI).
+1. Clone this project
+```bash
+    git clone https://github.com/GDSC-CAU/Pengy-AI.git
+```
+2. Create a Python virtual environmen
+```bash
+    python -m venv venv
+    ./venv/scripts/activate
+```
+3. Install dependencies
+```bash
+    pip install -r requirements.txt
+```
+4. if you wanna train your model, refer to jupyter
+``` bash
+    cd jupyter
+```
+5. for object detection with webcam
+``` bash
+    python detect.py your.model
+```
+6. export your model to tflite
+``` bash
+    python export.py your.model tflite
+```
+
+## System Architecture
+<img width="1856" alt="시스템아키텍쳐" src="https://github.com/GDSC-CAU/Pengy-FE/assets/63183021/c07a23d6-5448-4fef-80e0-17d4d1615d8a">
+
+## Used open source
+`yolo v8:`
+https://github.com/ultralytics/ultralytics
+`scholarly:`
+https://github.com/scholarly-python-package/scholarly
+
+## Google Products
+* Flutter
+* Firebase
+* TensorFlow Lite
+* Google Cloud Platform
+* Google Maps API
+* Google Login API
+* YouTube API
+* Gemini API
+
+## Team
+|Janghyeon Park (Leader)|Sunbin Do|Byeori Moon|Junhyung Park|
+|:---:|:---:|:---:|:---:|
+|Back-End/AI|	AI/Back-End|Front-End/Design|Front-End/AI|
+|[park-janghyeon](https://github.com/park-janghyeon)|[typingmistake](https://github.com/typingmistake)|[byeori-moon](https://github.com/byeori-moon)|[DogJHDOG](https://github.com/DogJHDOG/)|

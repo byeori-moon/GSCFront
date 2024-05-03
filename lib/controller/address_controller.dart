@@ -25,28 +25,16 @@ class AddressController extends GetxController {
   }
 
   void savePlace(String nickname, String coordinates,String address,int category) async {
-    // TODO: 여기에 실제 저장 로직 구현
-
-    print(category);
-    print(nickname);
-    print(coordinates);
-    print(address);
-
-    final dio = Dio();
-
+    final dio=Dio();
 
     try {
     final idToken = await TokenManager().getToken();
-
-
-
     // FormData 생성
     print(idToken);
 
     if (idToken != null) {
-      dio.interceptors.add(CustomInterceptor());
         final response = await dio.post(
-          'https://pengy.dev/api/spaces/myspace/create',
+          'http://pengy.dev/api/spaces/myspace/create',
           options: Options(headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $idToken',

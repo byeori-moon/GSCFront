@@ -6,19 +6,16 @@ import '../component/token_manager.dart';
 class FireHazard {
   final int id;
   final String object;
-  final int hazardCategory;
 
   FireHazard({
     required this.id,
     required this.object,
-    required this.hazardCategory,
   });
 
   factory FireHazard.fromJson(Map<String, dynamic> json) {
     return FireHazard(
       id: json['id'],
       object: json['object'],
-      hazardCategory: json['hazard_category'],
     );
   }
 }
@@ -68,14 +65,12 @@ class ObjectInformationData{
   final FireHazard fireHazard;
   final List<GoogleNewsData> googleNewsData;
   final List<ScholarlyData> scholarlyData;
-  final String fireSafetyInstructions;
   final String youtubeVideoLinks;
 
   ObjectInformationData({
     required this.fireHazard,
     required this.googleNewsData,
     required this.scholarlyData,
-    required this.fireSafetyInstructions,
     required this.youtubeVideoLinks,
   });
 
@@ -88,7 +83,6 @@ class ObjectInformationData{
       scholarlyData: (json['scholarly_data'] as List)
           .map((e) => ScholarlyData.fromJson(e))
           .toList(),
-      fireSafetyInstructions: json['fire_safety_instructions'],
       youtubeVideoLinks: json['youtube_video_links'],
     );
   }
