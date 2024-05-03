@@ -61,7 +61,7 @@ class Space {
       spaceName: json['spaceName'],
       coordinates: json['coordinates'],
       address: json['address'],
-        average_temperature:json['average_temperature'],
+      average_temperature:json['average_temperature'].toInt(),
     );
   }
 }

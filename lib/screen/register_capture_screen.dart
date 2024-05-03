@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 import '../controller/space_controller.dart';
 
 class RegisterCaptureScreen extends StatefulWidget {
-  final String image;
-
+  final XFile? image; // XFile을 nullable로 변경
   const RegisterCaptureScreen({required this.image, Key? key}) : super(key: key);
 
   @override
@@ -42,7 +41,7 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
 
                   ),
                   child: Image.asset(
-                    widget.image,
+                    widget.image!.path,
                     fit: BoxFit.fill, // 이미지를 화면에 맞게 조절
                   ),
                 ),
