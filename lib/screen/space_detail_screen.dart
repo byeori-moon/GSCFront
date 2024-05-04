@@ -1,5 +1,6 @@
 import 'package:camera_pj/component/button_component.dart';
 import 'package:camera_pj/constant/colors.dart';
+import 'package:camera_pj/screen/ai_safety_result.dart';
 import 'package:camera_pj/screen/information_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,7 +78,7 @@ class SpaceDetailScreen extends StatelessWidget {
                             // 클릭 이벤트 처리
                             // 예: 상세 페이지로 이동
                             // Get.to(() => InformationScreen(objectId: '${spaceDetail.fireHazard}',type: false));
-                            showDetailModal(context, spaceDetail.id);
+                            showDetailModal(context, spaceDetail.id, spaceDetail.thumbnailImage);
                           },
                           child: Card(
                             color: DEFAULT_YELLOW,
@@ -165,7 +166,7 @@ class SpaceDetailScreen extends StatelessWidget {
   }
 }
 
-void showDetailModal(BuildContext context, int id) {
+void showDetailModal(BuildContext context, int id, String imgUrl) {
   final SpaceObjectController spaceObjectController = Get.find();
 
   showGeneralDialog(
@@ -188,28 +189,40 @@ void showDetailModal(BuildContext context, int id) {
               return CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-
             } else if (snapshot.hasData) {
               return Align(
                 alignment: Alignment.centerRight,
                 child: Container(
                   width: 300,
                   child: Material(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        UserFireHazard hazard = snapshot.data![index];
-                        return ListTile(
-                          title: Text("ID: ${hazard.fireHazard.id} - ${hazard.fireHazard.object}"),
-                          subtitle: Text("Checked: ${hazard.isChecked ? 'Yes' : 'No'}"),
-                          trailing: IconButton(
-                            icon: Icon(Icons.arrow_forward),
-                            onPressed: () {
-                              Get.to(() => InformationScreen(objectId: '${hazard.fireHazard.id}', type: false));
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              UserFireHazard hazard = snapshot.data![index];
+                              return ListTile(
+                                title: Text("ID: ${hazard.fireHazard.id} - ${hazard.fireHazard.object}"),
+                                subtitle: Text("Checked: ${hazard.isChecked ? 'Yes' : 'No'}"),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.arrow_forward),
+                                  onPressed: () {
+                                    Get.to(() => InformationScreen(objectId: '${hazard.fireHazard.id}', type: false,));
+                                  },
+                                ),
+                              );
                             },
                           ),
-                        );
-                      },
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Get.to(()=>AISafetyResultScreen(spaceId: id, type: false, imgUrl: imgUrl));
+                              print("AI안전진단 결과보기 클릭");
+                            },
+                            child: Text('AI안전진단 결과보기')
+                        )
+                      ],
                     ),
                   ),
                 ),

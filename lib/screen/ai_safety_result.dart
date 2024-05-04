@@ -1,5 +1,7 @@
+import 'package:camera_pj/component/temperature_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/object_controller.dart';
+import 'package:camera_pj/controller/space_object_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,25 +11,26 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'camera_after_screen.dart';
 
-
-class InformationScreen extends StatefulWidget {
-  final String objectId;
+class AISafetyResultScreen extends StatefulWidget {
+  final int spaceId;
   final bool type;
-  InformationScreen({required this.objectId, required this.type});
+  final String imgUrl;
+
+  AISafetyResultScreen(
+      {required this.spaceId, required this.type, required this.imgUrl});
 
   @override
-  State<InformationScreen> createState() => _InformationScreenState();
+  State<AISafetyResultScreen> createState() => _InformationScreenState();
 }
 
-class _InformationScreenState extends State<InformationScreen> {
-  final ObjectController objectController = Get.put(ObjectController());
+class _InformationScreenState extends State<AISafetyResultScreen> {
+  final SpaceObjectController objectController =
+      Get.put(SpaceObjectController());
 
   @override
   void initState() {
     super.initState();
   }
-
-
 
   void _launchUrl(Uri url) async {
     if (!await launchUrl(url)) {
@@ -41,34 +44,30 @@ class _InformationScreenState extends State<InformationScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
         backgroundColor: BACKGROUND_COLOR,
         body: Center(
-            child: FutureBuilder<ObjectInformationData>(
-                future: objectController.getInformation(widget.objectId),
+            child: FutureBuilder<FireAssessment>(
+                future: objectController.getFireAssessment(widget.spaceId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   }
-                  final _loadedData=snapshot.data;
+                  final _loadedData = snapshot.data;
 
-                  final YoutubePlayerController _con = YoutubePlayerController(
-                    initialVideoId: _loadedData!.youtubeVideoLinks,
-                    flags: const YoutubePlayerFlags(
-                      autoPlay: false,
-                      mute: false,
-                    ),
-                  );
                   return ListView(
-
                     children: [
-
+                      SizedBox(
+                        height: 30,
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(left: 40.0, right: 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Image.asset('asset/img/ai_result_penguin.png'),
                             Text(
-                              _loadedData!.fireHazard.object,
+                              // _loadedData!.fireHazard.object,
+                              "AI안전진단 결과 안내",
                               style: TextStyle(
                                   fontFamily: 'OHSQUARE',
                                   fontSize: 30,
@@ -78,36 +77,38 @@ class _InformationScreenState extends State<InformationScreen> {
                               height: 40,
                               child: widget.type
                                   ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: BUTTON_BLUE,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(999),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  // 버튼이 눌렸을 때 수행할 동작 추가
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      size: 20,
-                                    ),
-                                    SizedBox(
-                                      width: 4,
-                                    ),
-                                    Text(
-                                      'add MySpace',
-                                      style: TextStyle(
-                                        fontFamily: 'OHSQUARE',
-                                        fontSize: 16,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        foregroundColor: BUTTON_BLUE,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(999),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                      onPressed: () {
+                                        // 버튼이 눌렸을 때 수행할 동작 추가
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.add,
+                                            size: 20,
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            'add MySpace',
+                                            style: TextStyle(
+                                              fontFamily: 'OHSQUARE',
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : SizedBox(), // widget.type이 false인 경우 빈 SizedBox 반환
                             ),
                           ],
@@ -119,7 +120,66 @@ class _InformationScreenState extends State<InformationScreen> {
                           children: [
                             ListTile(
                               title: Text(
-                                '🔥Fire incident',
+                                '🔥Degree of Fire Danger',
+                                style: TextStyle(
+                                    fontFamily: 'OHSQUARE',
+                                    fontSize: 22,
+                                    color: BUTTON_BLUE),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    margin: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: SHADOW_BLUE,
+                                          blurRadius: 4,
+                                          offset: Offset(2, 2), // 그림자의 방향
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .center, // 내용을 왼쪽 정렬
+                                      children: [
+                                        Container(
+                                          width: 200,
+                                          child: Image.network(widget.imgUrl,
+                                              fit:
+                                                  BoxFit.cover), // 이미지를 적절하게 맞춤
+                                        ),
+                                        Text(
+                                          _loadedData!.placeOrObjectDescription,
+                                          style: TextStyle(fontSize: 16),
+                                          overflow: TextOverflow.ellipsis,
+                                          // 텍스트 오버플로우 처리
+                                          maxLines: 2, // 최대 2줄 표시
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    width: 40,
+                                    child: ThermometerWidget(
+                                        temperature: _loadedData!
+                                            .degreeOfFireDanger
+                                            .toDouble())),
+                                Text(
+                                    _loadedData!.degreeOfFireDanger.toString() +
+                                        '`C'),
+                              ],
+                            ),
+                            ListTile(
+                              title: Text(
+                                '🔥Identified Fire Hazards',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,
@@ -140,169 +200,116 @@ class _InformationScreenState extends State<InformationScreen> {
                                   ),
                                 ],
                               ),
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  ListTile(
-                                    title: Row(
-                                      children: [
-                                        Icon(Icons.article_outlined, size: 20),
-                                        SizedBox(width: 4.0),
-                                        Expanded(
-                                          child: Text(
-                                            _loadedData!
-                                                .googleNewsData[0].title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontFamily: 'OHSQUAREAIR'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => NewsWebView(
-                                            objectController
-                                                .objectInformationData!
-                                                .googleNewsData[0]
-                                                .link),
-                                      ),
-                                    ),
-                                  ),
-                                  Divider(),
-                                  ListTile(
-                                    title: Row(
-                                      children: [
-                                        Icon(Icons.article_outlined, size: 20),
-                                        SizedBox(width: 4.0),
-                                        Expanded(
-                                          child: Text(
-                                            _loadedData!
-                                                .googleNewsData[1].title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontFamily: 'OHSQUAREAIR'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => NewsWebView(
-                                            objectController
-                                                .objectInformationData!
-                                                .googleNewsData[1]
-                                                .link),
-                                      ),
-                                    ),
-                                  ),
-                                  Divider(),
-                                  ListTile(
-                                    title: Row(
-                                      children: [
-                                        Icon(Icons.article_outlined, size: 20),
-                                        SizedBox(width: 4.0),
-                                        Expanded(
-                                          child: Text(
-                                            _loadedData!
-                                                .googleNewsData[2].title,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontFamily: 'OHSQUAREAIR'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => NewsWebView(
-                                            objectController
-                                                .objectInformationData!
-                                                .googleNewsData[2]
-                                                .link),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: _loadedData!.identifiedFireHazards
+                                      .split(', ')
+                                      .map((String hazard) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: Row(
+                                              children: [
+                                                Text('🧨'),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Flexible(
+                                                  child: Text(
+                                                    '$hazard',
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontFamily:
+                                                            'OHSQUAREAIR'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
                               ),
                             ),
-                            // ListTile(
-                            //   title: Text(
-                            //     '❗The Safety Method',
-                            //     style: TextStyle(
-                            //         fontFamily: 'OHSQUARE',
-                            //         fontSize: 22,
-                            //         color: BUTTON_BLUE),
-                            //   ),
-                            //   subtitle: Text(
-                            //     'Attention',
-                            //     style: TextStyle(
-                            //         fontFamily: 'OHSQUAREAIR',
-                            //         fontSize: 14,
-                            //         color: BUTTON_BLUE),
-                            //   ),
-                            // ),
-                            // Container(
-                            //   padding: EdgeInsets.all(20),
-                            //   margin: EdgeInsets.all(4),
-                            //   decoration: BoxDecoration(
-                            //     color: Colors.white,
-                            //     borderRadius: BorderRadius.circular(20),
-                            //     boxShadow: [
-                            //       BoxShadow(
-                            //         color: SHADOW_BLUE,
-                            //         blurRadius: 4,
-                            //         offset: Offset(2, 2), // 그림자의 방향
-                            //       ),
-                            //     ],
-                            //   ),
-                            //   child: Column(
-                            //     children: lines
-                            //         .map((line) => Column(
-                            //               children: [
-                            //                 Text(
-                            //                   line,
-                            //                   style: TextStyle(
-                            //                       fontSize: 16.0,
-                            //                       fontFamily: 'OHSQUAREAIR'),
-                            //                 ),
-                            //                 if (line != lines.last) Divider(),
-                            //               ],
-                            //             ))
-                            //         .toList(),
-                            //   ),
-                            // ),
+
                             ListTile(
                               title: Text(
-                                '📺 Youtube Videos',
+                                '🔥Mitigation Measures',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,
                                     color: BUTTON_BLUE),
                               ),
-                              subtitle: Text(
-                                'Watch related videos.',
-                                style: TextStyle(
-                                    fontFamily: 'OHSQUAREAIR',
-                                    fontSize: 14,
-                                    color: BUTTON_BLUE),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: SHADOW_BLUE,
+                                    blurRadius: 4,
+                                    offset: Offset(2, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: _loadedData!.mitigationMeasures
+                                      .split('\n') // 각 줄을 분리
+                                      .map((String measure) {
+                                    String numberEmoji;
+                                    if (measure.startsWith('1.')) {
+                                      numberEmoji = '🔴 ';
+                                    } else if (measure.startsWith('2.')) {
+                                      numberEmoji = '🟠 ';
+                                    } else if (measure.startsWith('3.')) {
+                                      numberEmoji = '🟢 ';
+                                    } else {
+                                      numberEmoji = '';
+                                    }
+                                    List<TextSpan> spans = []; // TextSpan 리스트 생성
+                                    final RegExp exp = RegExp(r'\*\*(.*?)\*\*'); // 정규식으로 볼드 처리할 텍스트 찾기
+                                    String text = measure.substring(3); // 숫자와 점 제거
+                                    text.splitMapJoin(
+                                      exp,
+                                      onMatch: (Match m) {
+                                        spans.add(TextSpan(text: m.group(1), style: TextStyle(fontWeight: FontWeight.bold))); // 볼드 처리
+                                        return '';
+                                      },
+                                      onNonMatch: (String text) {
+                                        spans.add(TextSpan(text: text)); // 일반 텍스트 처리
+                                        return '';
+                                      },
+                                    );
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(fontSize: 14.0, fontFamily: 'OHSQUAREAIR', color: Colors.black),
+                                          children: [
+                                            TextSpan(text: '$numberEmoji '), // 이모지 추가
+                                            ...spans, // 볼드 및 일반 텍스트 스팬
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  })
+                                      .expand((element) => [element, Divider()]) // 각 요소 뒤에 Divider 추가
+                                      .toList()
+                                    ..removeLast(), // 마지막 Divider 제거
+                                ),
                               ),
                             ),
-                            YoutubePlayer(
-                              controller: _con,
-                            ),
+
                             ListTile(
                               title: Text(
-                                '📜 Related papers',
+                                '📜 Additional Information',
                                 style: TextStyle(
                                     fontFamily: 'OHSQUARE',
                                     fontSize: 22,
@@ -319,101 +326,38 @@ class _InformationScreenState extends State<InformationScreen> {
                                   BoxShadow(
                                     color: SHADOW_BLUE,
                                     blurRadius: 4,
-                                    offset: Offset(2, 2), // 그림자의 방향
+                                    offset: Offset(2, 2),
                                   ),
                                 ],
                               ),
-                              child: Column(
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(color: Colors.black),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: 'title: \n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUARE',
-                                                fontSize: 16)),
-                                        TextSpan(
-                                            text:
-                                            '${_loadedData!.scholarlyData[0].title}\n\n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUAREAIR',
-                                                fontSize: 15,
-                                                height: 1.5)),
-                                        TextSpan(
-                                            text: 'author: \n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUARE',
-                                                fontSize: 16)),
-                                        TextSpan(
-                                            text:
-                                            '${_loadedData!.scholarlyData[0].authors}\n\n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUAREAIR',
-                                                fontSize: 15,
-                                                height: 1.5)),
-                                        TextSpan(
-                                            text: 'year: \n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUARE',
-                                                fontSize: 16)),
-                                        TextSpan(
-                                            text:
-                                            '${_loadedData!.scholarlyData[0].pubYear}\n\n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUAREAIR',
-                                                fontSize: 15,
-                                                height: 1.5)),
-                                        TextSpan(
-                                            text: 'publisher: \n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUARE',
-                                                fontSize: 16)),
-                                        TextSpan(
-                                            text:
-                                            '${_loadedData!.scholarlyData[0].venue}\n\n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUAREAIR',
-                                                fontSize: 15,
-                                                height: 1.5)),
-                                        TextSpan(
-                                            text: 'summary: \n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUARE',
-                                                fontSize: 16)),
-                                        TextSpan(
-                                            text:
-                                            '${_loadedData!.scholarlyData[0].abstract}\n\n',
-                                            style: TextStyle(
-                                                fontFamily: 'OHSQUAREAIR',
-                                                fontSize: 15,
-                                                height: 1.5)),
-                                        TextSpan(
-                                          text: 'click to see paper',
-                                          style: TextStyle(
-                                            color: BUTTON_BLUE,
-                                            decoration:
-                                            TextDecoration.underline,
-                                            fontFamily: 'OHSQUAREAIR',
-                                            fontSize: 18,
+                              child: ExpansionTile(
+                                title: Text('More Information',
+                                    style: TextStyle(
+                                        fontFamily: 'OHSQUARE',
+                                        fontSize: 16)),
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'OHSQUAREAIR', height: 1.5),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: 'Additional Recommendations: \n',
+                                            style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      DocumentWebView(
-                                                          objectController
-                                                              .objectInformationData!
-                                                              .scholarlyData[0]
-                                                              .pubUrl),
-                                                ),
-                                              );
-                                            },
-                                        )
-                                      ],
+                                          TextSpan(
+                                            text: _loadedData.additionalRecommendations,
+                                          ),
+                                          TextSpan(
+                                            text: '\n\nFact Check: \n',
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text: _loadedData.factCheck,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -425,11 +369,7 @@ class _InformationScreenState extends State<InformationScreen> {
                       Image.asset('asset/img/default_character_bottom.png'),
                     ],
                   );
-                }
-            )
-        )
-
-    );
+                })));
   }
 }
 

@@ -88,7 +88,6 @@ class ObjectInformationData{
   }
 }
 
-
 class ObjectController extends GetxController {
   ObjectInformationData? objectInformationData;
 

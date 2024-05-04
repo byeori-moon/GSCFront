@@ -58,9 +58,48 @@ class SpaceDetail {
   }
 }
 
+class FireAssessment {
+  final int id;
+  final int mySpaceDetail;
+  final String nickname;
+  final String placeOrObjectDescription;
+  final int degreeOfFireDanger;
+  final String identifiedFireHazards;
+  final String mitigationMeasures;
+  final String additionalRecommendations;
+  final String factCheck;
+
+  FireAssessment({
+    required this.id,
+    required this.mySpaceDetail,
+    required this.nickname,
+    required this.placeOrObjectDescription,
+    required this.degreeOfFireDanger,
+    required this.identifiedFireHazards,
+    required this.mitigationMeasures,
+    required this.additionalRecommendations,
+    required this.factCheck,
+  });
+
+  factory FireAssessment.fromJson(Map<String, dynamic> json) {
+    return FireAssessment(
+      id: json['id'],
+      mySpaceDetail: json['my_space_detail'],
+      nickname: json['nickname'],
+      placeOrObjectDescription: json['place_or_object_description'],
+      degreeOfFireDanger: json['degree_of_fire_danger'].toInt(),
+      identifiedFireHazards: json['identified_fire_hazards'],
+      mitigationMeasures: json['mitigation_measures'],
+      additionalRecommendations: json['additional_recommendations'],
+      factCheck: json['fact_check'],
+    );
+  }
+}
+
 class SpaceObjectController extends GetxController {
   List<SpaceDetail> spaceDetails = <SpaceDetail>[].obs;
   List<UserFireHazard> fireHazardDetails = [];
+  FireAssessment? fireAssessment;
 
   @override
   void onInit() {
@@ -127,6 +166,35 @@ class SpaceObjectController extends GetxController {
     catch (e) {
     print("Error fetching space objects: ${e.toString()}");
     return fireHazardDetails;
+
+    }
+  }
+
+  Future<FireAssessment> getFireAssessment(int mySpaceDetailId) async {
+    final dio = Dio();
+
+    try {
+      final idToken = await TokenManager().getToken();
+      final response = await dio.get(
+        'http://pengy.dev/api/spaces/get-vision-result/$mySpaceDetailId',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("Fetched getFireAssessment objects: ${response.data}");
+
+        fireAssessment = FireAssessment.fromJson(response.data[0]);
+      } else {
+        throw Exception('Failed to load fire assessment data');
+      }
+      return fireAssessment!;
+
+    } catch (e) {
+      print('Error fetching fire assessment data: $e');
+      throw Exception('Error fetching fire assessment data');
 
     }
   }
