@@ -188,30 +188,36 @@ void showDetailModal(BuildContext context, int id) {
               return CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
+
             } else if (snapshot.hasData) {
               return Align(
                 alignment: Alignment.centerRight,
-                child: Container(
-                  width: 300,
-                  height: double.infinity,
-                  child: Material(
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        UserFireHazard hazard = snapshot.data![index];
-                        return ListTile(
-                          title: Text("ID: ${hazard.fireHazard.id} - ${hazard.fireHazard.object}"),
-                          subtitle: Text("Checked: ${hazard.isChecked ? 'Yes' : 'No'}"),
-                          trailing: IconButton(
-                            icon: Icon(Icons.arrow_forward),
-                            onPressed: () {
-                              Get.to(() => InformationScreen(objectId: '${hazard.fireHazard.id}', type: false));
-                            },
-                          ),
-                        );
-                      },
+                child: Column(
+                  children: [
+                    Container(
+                      width: 300,
+                      height: double.infinity,
+                      child: Material(
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            UserFireHazard hazard = snapshot.data![index];
+                            return ListTile(
+                              title: Text("ID: ${hazard.fireHazard.id} - ${hazard.fireHazard.object}"),
+                              subtitle: Text("Checked: ${hazard.isChecked ? 'Yes' : 'No'}"),
+                              trailing: IconButton(
+                                icon: Icon(Icons.arrow_forward),
+                                onPressed: () {
+                                  Get.to(() => InformationScreen(objectId: '${hazard.fireHazard.id}', type: false));
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                    ElevatedButton(onPressed: ()=>{}, child: Text('AI안전진단 결과보기')),
+                  ],
                 ),
               );
             } else {
