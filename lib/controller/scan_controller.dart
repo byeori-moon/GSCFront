@@ -6,7 +6,7 @@ import 'package:camera_pj/component/token_manager.dart';
 import 'package:camera_pj/controller/account_controller.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_vision/flutter_vision.dart';
 
@@ -51,8 +51,6 @@ class ScanController extends GetxController {
           imageWidth.value = image.width;
           imageHeight.value = image.height;
           objectDetection(image);
-          print(imageWidth.value);
-          print(imageHeight.value);
 
         });
         isCameraInitialized(true);
@@ -129,19 +127,60 @@ class ScanController extends GetxController {
       }
     }
   }
+
+  void objectWithVisionPro(XFile file) async{
+    print(111);
+    final dio = Dio(  BaseOptions(
+      connectTimeout: Duration(seconds: 30),
+    ),);
+
+    final String imageUrl = file.path;
+
+    var formData = FormData.fromMap({
+      'image': await MultipartFile.fromFile(imageUrl),
+      'nickname' : "name",
+      "my_space": 4,
+
+    });
+
+    final String? idToken = await TokenManager().getToken();
+
+    try {
+      dio.interceptors.add(CustomInterceptor());
+
+      final response = await dio.post(
+        'https://pengy.dev/api/gem-vision/generate-vision-result/',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $idToken',
+
+        }),
+        data: formData,
+      );
+      if (response.statusCode == 200) {
+
+        debugPrint('11 사진 보내 버리기: ${response.data}');
+      } else {
+        print('11 사진 못보내 버리기: ${response.data}');
+      }
+    } catch (e) {
+      print('11 연결 안돼 버리기: $e');
+    }
+
+  }
   // 사진을 찍는 메서드
   Future<XFile?> takePicture() async {
     if (!cameraController.value.isInitialized) {
       print("Error: Camera controller is not initialized");
       return null;
     }
-
     try {
       // 이미지를 캡처합니다.
       XFile picture = await cameraController.takePicture();
-
-//      objectDetectionImage(picture as File);
+      //   objectDetectionImage(picture as File);
+      // objectWithVisionPro(picture);
       // 캡처한 이미지의 경로를 반환합니다.
+      print(11);
       return picture;
     } catch (e) {
       print("Error capturing picture: $e");
@@ -183,5 +222,6 @@ class ScanController extends GetxController {
     }
 
   }
+
 
 }

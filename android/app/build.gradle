@@ -1,3 +1,4 @@
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -75,4 +76,3 @@ flutter {
 dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
 }
-
