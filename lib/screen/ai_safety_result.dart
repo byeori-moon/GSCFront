@@ -130,6 +130,25 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                SizedBox(width: 20,),
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                        width: 40,
+                                        child: ThermometerWidget(
+                                            temperature: _loadedData!
+                                                .degreeOfFireDanger
+                                                .toDouble())),
+                                    Text(_loadedData!.degreeOfFireDanger
+                                        .toString() +
+                                        '`C',style: TextStyle(
+                                      fontFamily: 'OHSQUARE',)),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.all(20),
@@ -152,29 +171,17 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                                         Container(
                                           width: 200,
                                           child: Image.network(widget.imgUrl,
-                                              fit:
-                                                  BoxFit.cover), // 이미지를 적절하게 맞춤
+                                              fit: BoxFit.cover),
                                         ),
                                         Text(
                                           _loadedData!.placeOrObjectDescription,
                                           style: TextStyle(fontSize: 16),
-                                          overflow: TextOverflow.ellipsis,
-                                          // 텍스트 오버플로우 처리
-                                          maxLines: 2, // 최대 2줄 표시
                                         )
                                       ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                    width: 40,
-                                    child: ThermometerWidget(
-                                        temperature: _loadedData!
-                                            .degreeOfFireDanger
-                                            .toDouble())),
-                                Text(
-                                    _loadedData!.degreeOfFireDanger.toString() +
-                                        '`C'),
+
                               ],
                             ),
                             ListTile(
@@ -232,7 +239,6 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                                 ),
                               ),
                             ),
-
                             ListTile(
                               title: Text(
                                 '🔥Mitigation Measures',
@@ -263,50 +269,66 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                                   children: _loadedData!.mitigationMeasures
                                       .split('\n') // 각 줄을 분리
                                       .map((String measure) {
-                                    String numberEmoji;
-                                    if (measure.startsWith('1.')) {
-                                      numberEmoji = '🔴 ';
-                                    } else if (measure.startsWith('2.')) {
-                                      numberEmoji = '🟠 ';
-                                    } else if (measure.startsWith('3.')) {
-                                      numberEmoji = '🟢 ';
-                                    } else {
-                                      numberEmoji = '';
-                                    }
-                                    List<TextSpan> spans = []; // TextSpan 리스트 생성
-                                    final RegExp exp = RegExp(r'\*\*(.*?)\*\*'); // 정규식으로 볼드 처리할 텍스트 찾기
-                                    String text = measure.substring(3); // 숫자와 점 제거
-                                    text.splitMapJoin(
-                                      exp,
-                                      onMatch: (Match m) {
-                                        spans.add(TextSpan(text: m.group(1), style: TextStyle(fontWeight: FontWeight.bold))); // 볼드 처리
-                                        return '';
-                                      },
-                                      onNonMatch: (String text) {
-                                        spans.add(TextSpan(text: text)); // 일반 텍스트 처리
-                                        return '';
-                                      },
-                                    );
-                                    return Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 8),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: TextStyle(fontSize: 14.0, fontFamily: 'OHSQUAREAIR', color: Colors.black),
-                                          children: [
-                                            TextSpan(text: '$numberEmoji '), // 이모지 추가
-                                            ...spans, // 볼드 및 일반 텍스트 스팬
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  })
-                                      .expand((element) => [element, Divider()]) // 각 요소 뒤에 Divider 추가
+                                        String numberEmoji;
+                                        if (measure.startsWith('1.')) {
+                                          numberEmoji = '🔴 ';
+                                        } else if (measure.startsWith('2.')) {
+                                          numberEmoji = '🟠 ';
+                                        } else if (measure.startsWith('3.')) {
+                                          numberEmoji = '🟢 ';
+                                        } else {
+                                          numberEmoji = '';
+                                        }
+                                        List<TextSpan> spans =
+                                            []; // TextSpan 리스트 생성
+                                        final RegExp exp = RegExp(
+                                            r'\*\*(.*?)\*\*'); // 정규식으로 볼드 처리할 텍스트 찾기
+                                        String text =
+                                            measure.substring(3); // 숫자와 점 제거
+                                        text.splitMapJoin(
+                                          exp,
+                                          onMatch: (Match m) {
+                                            spans.add(TextSpan(
+                                                text: m.group(1),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight
+                                                        .bold))); // 볼드 처리
+                                            return '';
+                                          },
+                                          onNonMatch: (String text) {
+                                            spans.add(TextSpan(
+                                                text: text)); // 일반 텍스트 처리
+                                            return '';
+                                          },
+                                        );
+                                        return Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontFamily: 'OHSQUAREAIR',
+                                                  color: Colors.black),
+                                              children: [
+                                                TextSpan(text: '$numberEmoji '),
+                                                // 이모지 추가
+                                                ...spans,
+                                                // 볼드 및 일반 텍스트 스팬
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      })
+                                      .expand((element) => [
+                                            element,
+                                            Divider()
+                                          ]) // 각 요소 뒤에 Divider 추가
                                       .toList()
                                     ..removeLast(), // 마지막 Divider 제거
                                 ),
                               ),
                             ),
-
                             ListTile(
                               title: Text(
                                 '📜 Additional Information',
@@ -333,25 +355,32 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                               child: ExpansionTile(
                                 title: Text('More Information',
                                     style: TextStyle(
-                                        fontFamily: 'OHSQUARE',
-                                        fontSize: 16)),
+                                        fontFamily: 'OHSQUARE', fontSize: 16)),
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: RichText(
                                       text: TextSpan(
-                                        style: TextStyle(color: Colors.black, fontSize: 15, fontFamily: 'OHSQUAREAIR', height: 1.5),
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontFamily: 'OHSQUAREAIR',
+                                            height: 1.5),
                                         children: <TextSpan>[
                                           TextSpan(
-                                            text: 'Additional Recommendations: \n',
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                            text:
+                                                'Additional Recommendations: \n',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                           TextSpan(
-                                            text: _loadedData.additionalRecommendations,
+                                            text: _loadedData
+                                                .additionalRecommendations,
                                           ),
                                           TextSpan(
                                             text: '\n\nFact Check: \n',
-                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                           TextSpan(
                                             text: _loadedData.factCheck,

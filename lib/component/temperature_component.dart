@@ -21,7 +21,7 @@ class _ThermometerWidgetState extends State<ThermometerWidget> with SingleTicker
       vsync: this,
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0.2, end: 0.8).animate(
+    _animation = Tween<double>(begin: 0.8, end: 1.0).animate(
         CurvedAnimation(parent: _controller, curve: Curves.easeInOut)
     )..addListener(() {
       setState(() {});
@@ -37,7 +37,7 @@ class _ThermometerWidgetState extends State<ThermometerWidget> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: Size(50, 200), // 조정 가능한 온도계 크기
+      size: Size(50, 200), // Configurable thermometer size
       painter: ThermometerPainter(widget.temperature / 100, _animation.value),
     );
   }
@@ -51,20 +51,41 @@ class ThermometerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()
-      ..color = Colors.red
+    List<Color> gradientColors = [
+      Colors.green,
+      Colors.yellow,
+      Colors.orange,
+      Colors.red,
+      Colors.deepPurple
+    ];
+
+    final stops = List.generate(gradientColors.length, (index) => index / (gradientColors.length - 1));
+
+    final Gradient gradient = LinearGradient(
+      colors: gradientColors,
+      stops: stops,
+      begin: Alignment.bottomCenter,
+      end: Alignment.topCenter,
+    );
+
+    var liquidPaint = Paint()
+      ..shader = gradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
 
-    double liquidHeight = size.height * level * waveEffect;
+    canvas.drawRect(Rect.fromLTWH(0, size.height - level * size.height * waveEffect, size.width, level * size.height * waveEffect), liquidPaint);
 
-    var path = Path()
-      ..moveTo(size.width / 2, 0)
+    var containerPaint = Paint()
+      ..color = Colors.grey
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+
+    var containerPath = Path()
+      ..moveTo(size.width, 0)
       ..lineTo(size.width, size.height)
       ..lineTo(0, size.height)
+      ..lineTo(0, 0)
       ..close();
-    canvas.drawPath(path, paint..color = Colors.grey);
-
-    canvas.drawRect(Rect.fromLTWH(0, size.height - liquidHeight, size.width, liquidHeight), paint);
+    canvas.drawPath(containerPath, containerPaint);
   }
 
   @override
