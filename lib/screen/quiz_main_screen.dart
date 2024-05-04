@@ -109,6 +109,7 @@ class QuizMainScreen extends StatelessWidget {
                           ),
                           onPressed: () async {
                             await quizController.fetchQuizzes();
+                            quizController.updateQuizPost(true);
                             quizController.quizAnswer=null;
                             quizController.quizScore=0;
                             Get.to(() => QuizSolveScreen(index: 0));
