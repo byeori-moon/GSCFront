@@ -50,8 +50,8 @@ class _BeforeDartCameraState extends State<BeforeDartCamera> {
                         style: TextStyle(
                           color: Color(0xFF97ACB8),
                           fontSize: 35,
-                          fontFamily: 'Cafe24 Ohsquare OTF',
                           fontWeight: FontWeight.w400,
+                          fontFamily: 'OHSQUARE'
                         ),
                       ),
                     ),
@@ -69,7 +69,7 @@ class _BeforeDartCameraState extends State<BeforeDartCamera> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
-                        fontFamily: 'Cafe24 Ohsquare air OTF',
+                        fontFamily: 'OHSQUAREAIR',
                         fontWeight: FontWeight.w300,
                       ),
                   ),
@@ -111,7 +111,7 @@ class _BeforeDartCameraState extends State<BeforeDartCamera> {
                           style: TextStyle(
                             color: Color(0xFFFEFDF8),
                             fontSize: 18,
-                            fontFamily: 'BM JUA_OTF',
+                            fontFamily: 'OHSQUARE',
                             fontWeight: FontWeight.w400,
                           ),
                         ),
