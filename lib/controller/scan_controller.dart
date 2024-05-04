@@ -158,7 +158,6 @@ class ScanController extends GetxController {
         data: formData,
       );
       if (response.statusCode == 200) {
-
         debugPrint('11 사진 보내 버리기: ${response.data}');
       } else {
         print('11 사진 못보내 버리기: ${response.data}');
@@ -181,6 +180,7 @@ class ScanController extends GetxController {
       // objectWithVisionPro(picture);
       // 캡처한 이미지의 경로를 반환합니다.
       print(11);
+      print(picture.path);
       return picture;
     } catch (e) {
       print("Error capturing picture: $e");
@@ -220,8 +220,5 @@ class ScanController extends GetxController {
     } catch (e) {
       print('물체등록 요청 중 오류 발생: $e');
     }
-
   }
-
-
 }

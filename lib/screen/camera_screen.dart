@@ -140,7 +140,7 @@ class CameraView extends StatelessWidget {
                       Navigator.push(
                         context, MaterialPageRoute(
                           builder: (context)=>
-                              RegisterCaptureScreen(image: image)
+                              RegisterCaptureScreen(image: image!.path)
                         )
                       );
                       // Navigator.push(

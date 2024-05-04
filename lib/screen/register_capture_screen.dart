@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,10 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../controller/space_controller.dart';
+import 'ai_safty_screen.dart';
 
 class RegisterCaptureScreen extends StatefulWidget {
-  final XFile? image; // XFile을 nullable로 변경
+  final String image; // XFile을 nullable로 변경
   const RegisterCaptureScreen({required this.image, Key? key}) : super(key: key);
 
   @override
@@ -17,7 +20,7 @@ class RegisterCaptureScreen extends StatefulWidget {
 class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
   @override
   Widget build(BuildContext context) {
-    String? objectName = null;
+    String? objectName = '';
     final spaceController = Get.find<SpaceController>(); // 가정한 ScanController 가져오기
     int selectedTag = spaceController.spaces[0].id; // 선택된 태그를 저장하는 변수
     return MaterialApp(
@@ -40,9 +43,9 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                     borderRadius: BorderRadius.circular(10.0), // 모든 모서리를 뭉뚝하게 만듭니다.
 
                   ),
-                  child: Image.asset(
-                    widget.image!.path,
-                    fit: BoxFit.fill, // 이미지를 화면에 맞게 조절
+                  child: Image.file(
+                    File(widget.image),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 SizedBox(
@@ -120,8 +123,9 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                    // ));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                        AuInformationScreen(image: widget.image, name: objectName, tag: selectedTag)
+                    ));
                   },
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.8 * 0.1,
@@ -138,7 +142,7 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '촬영하러 가기',
+                          '다음으로',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xFFFEFDF8),
