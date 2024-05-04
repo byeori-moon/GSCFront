@@ -22,7 +22,7 @@ class _MapScreenState extends State<MapScreen> {
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     LatLng userCurrentLocation = LatLng(position.latitude, position.longitude);
-    print(position);
+    print("position : $position");
     setState(() {
       initialPosition = userCurrentLocation;
     });
@@ -93,7 +93,9 @@ class _MapScreenState extends State<MapScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              if(snapshot.data!=null) {
+                return Text('Error: ${snapshot.error}');
+              }
             }
             return GoogleMap(
               onMapCreated: (GoogleMapController controller) {
@@ -106,7 +108,8 @@ class _MapScreenState extends State<MapScreen> {
                 target: initialPosition,
                 zoom: 14.0,
               ),
-              markers: snapshot.data!,
+
+              markers: snapshot.data ?? {}, // 수정된 부분
             );
           }),
     );

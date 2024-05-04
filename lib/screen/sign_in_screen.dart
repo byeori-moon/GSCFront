@@ -1,6 +1,7 @@
 import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/screen/home_screen.dart';
+import 'package:camera_pj/screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,7 +50,9 @@ class _SignInNameInputState extends State<SignInNameInput> {
               ),
               Row(
                 children: [
-                  SecondButton(buttonText: '이전', onPressed: () {}),
+                  SecondButton(buttonText: '이전', onPressed: () {
+                    Get.to(LoginScreen());
+                  }),
                   SizedBox(
                     width: 12,
                   ),

@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         signInWithGoogle().then((user) {
                           print(user);
-                          Get.to(SignInNameInput());
+                          onGoogleSignInButtonPressed();
                         });
                       },
                     ),

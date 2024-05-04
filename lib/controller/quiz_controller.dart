@@ -1,5 +1,6 @@
 import 'package:camera_pj/screen/home_screen.dart';
 import 'package:camera_pj/screen/quiz_main_screen.dart';
+import 'package:camera_pj/screen/quiz_solve_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
@@ -22,13 +23,19 @@ class Quiz {
 
 class QuizController extends GetxController {
   List<Quiz> quizzes = [];
-  late int score;
+  late int score = 15;
   bool? quizAnswer;
   int quizScore = 0;
-
+  late bool quizPost = true;
   @override
   void onInit() {
     super.onInit();
+  }
+
+
+  void updateQuizPost(bool isQuiz) {
+    quizPost = isQuiz;
+    update();
   }
 
   void updateQuizAnswer(bool selectQuizAnswer) {
@@ -38,7 +45,13 @@ class QuizController extends GetxController {
 
   void updateScreen(int index) async {
     if (index == 4) {
-      await postQuizScore(quizScore).then((value) => Get.offAll(HomeScreen(initialIndex: 2,), transition: Transition.fade));
+      if(quizPost==true) await postQuizScore(quizScore).then((value) => Get.offAll(HomeScreen(initialIndex: 2,), transition: Transition.fade));
+      else {
+        print(11);
+        // await fetchQuizzes();
+        quizAnswer=null;
+        quizScore=0;
+      }
       quizAnswer=null;
       quizScore = 0;
     } else {

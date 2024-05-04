@@ -2,6 +2,7 @@ import 'package:camera_pj/component/input_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/account_controller.dart';
 import 'package:camera_pj/controller/object_controller.dart';
+import 'package:camera_pj/screen/before_camera_screen.dart';
 import 'package:camera_pj/screen/camera_screen.dart';
 import 'package:camera_pj/screen/map_screen.dart';
 import 'package:camera_pj/screen/quiz_main_screen.dart';
@@ -235,7 +236,7 @@ class _HomeScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.to(CameraView());
+                        Get.to(BeforeDartCamera());
                       },
                       style: ElevatedButton.styleFrom(
                         shadowColor: SHADOW_BLUE,
