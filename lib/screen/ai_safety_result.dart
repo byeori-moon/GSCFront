@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera_pj/component/temperature_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/object_controller.dart';
@@ -75,41 +77,7 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                             ),
                             SizedBox(
                               height: 40,
-                              child: widget.type
-                                  ? ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        foregroundColor: BUTTON_BLUE,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(999),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        // 버튼이 눌렸을 때 수행할 동작 추가
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            size: 20,
-                                          ),
-                                          SizedBox(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            'add MySpace',
-                                            style: TextStyle(
-                                              fontFamily: 'OHSQUARE',
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox(), // widget.type이 false인 경우 빈 SizedBox 반환
+                              child: SizedBox(),
                             ),
                           ],
                         ),
@@ -168,10 +136,17 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                                       crossAxisAlignment: CrossAxisAlignment
                                           .center, // 내용을 왼쪽 정렬
                                       children: [
+                                        widget.type==false?
                                         Container(
                                           width: 200,
                                           child: Image.network(widget.imgUrl,
                                               fit: BoxFit.cover),
+                                        ):Container(
+                                          width: 200,
+                                          child:Image.file(
+                                            File(widget.imgUrl),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                         Text(
                                           _loadedData!.placeOrObjectDescription,
@@ -266,67 +241,59 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: _loadedData!.mitigationMeasures
-                                      .split('\n') // 각 줄을 분리
-                                      .map((String measure) {
-                                        String numberEmoji;
-                                        if (measure.startsWith('1.')) {
-                                          numberEmoji = '🔴 ';
-                                        } else if (measure.startsWith('2.')) {
-                                          numberEmoji = '🟠 ';
-                                        } else if (measure.startsWith('3.')) {
-                                          numberEmoji = '🟢 ';
-                                        } else {
-                                          numberEmoji = '';
-                                        }
-                                        List<TextSpan> spans =
-                                            []; // TextSpan 리스트 생성
-                                        final RegExp exp = RegExp(
-                                            r'\*\*(.*?)\*\*'); // 정규식으로 볼드 처리할 텍스트 찾기
-                                        String text =
-                                            measure.substring(3); // 숫자와 점 제거
-                                        text.splitMapJoin(
-                                          exp,
-                                          onMatch: (Match m) {
-                                            spans.add(TextSpan(
-                                                text: m.group(1),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight
-                                                        .bold))); // 볼드 처리
-                                            return '';
-                                          },
-                                          onNonMatch: (String text) {
-                                            spans.add(TextSpan(
-                                                text: text)); // 일반 텍스트 처리
-                                            return '';
-                                          },
-                                        );
-                                        return Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 8),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontFamily: 'OHSQUAREAIR',
-                                                  color: Colors.black),
-                                              children: [
-                                                TextSpan(text: '$numberEmoji '),
-                                                // 이모지 추가
-                                                ...spans,
-                                                // 볼드 및 일반 텍스트 스팬
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      })
+                                  children: RegExp(r'\d+\.[^\d]+')
+                                      .allMatches(_loadedData!.mitigationMeasures)
+                                      .map((Match match) {
+                                    String measure = match.group(0)!;
+                                    String numberEmoji;
+                                    if (measure.startsWith('1.')) {
+                                      numberEmoji = '🔴 ';
+                                    } else if (measure.startsWith('2.')) {
+                                      numberEmoji = '🟠 ';
+                                    } else if (measure.startsWith('3.')) {
+                                      numberEmoji = '🟢 ';
+                                    } else {
+                                      numberEmoji = '';
+                                    }
+                                    List<TextSpan> spans = []; // TextSpan 리스트 생성
+                                    final RegExp exp = RegExp(r'\*\*(.*?)\*\*'); // 정규식으로 볼드 처리할 텍스트 찾기
+                                    String text = measure.substring(3); // 숫자와 점 제거
+                                    text.splitMapJoin(
+                                      exp,
+                                      onMatch: (Match m) {
+                                        spans.add(TextSpan(
+                                            text: m.group(1),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold))); // 볼드 처리
+                                        return '';
+                                      },
+                                      onNonMatch: (String text) {
+                                        spans.add(TextSpan(text: text)); // 일반 텍스트 처리
+                                        return '';
+                                      },
+                                    );
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 8),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 14.0, fontFamily: 'OHSQUAREAIR', color: Colors.black),
+                                          children: [
+                                            TextSpan(text: '$numberEmoji '), // 이모지 추가
+                                            ...spans, // 볼드 및 일반 텍스트 스팬
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  })
                                       .expand((element) => [
-                                            element,
-                                            Divider()
-                                          ]) // 각 요소 뒤에 Divider 추가
+                                    element,
+                                    Divider()
+                                  ]) // 각 요소 뒤에 Divider 추가
                                       .toList()
                                     ..removeLast(), // 마지막 Divider 제거
-                                ),
+                                )
+
                               ),
                             ),
                             ListTile(

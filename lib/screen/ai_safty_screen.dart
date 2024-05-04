@@ -36,7 +36,7 @@ class _AuInformationScreenState extends State<AuInformationScreen> {
     ));
 
     var formData = FormData.fromMap({
-      'image': await await MultipartFile.fromFile(file),
+      'image': await MultipartFile.fromFile(file),
       'nickname': name,
       "my_space": tag,
     });
@@ -55,10 +55,8 @@ class _AuInformationScreenState extends State<AuInformationScreen> {
         data: formData,
       );
       if (response.statusCode == 200) {
-        debugPrint('11 사진 보내 버리기: ${response.data['Degree of Fire Danger']}');
-        setState(() {
-          tag = response.data['Degree of Fire Danger'];
-        });
+        print('11 사진 보내 버리기: ${response.data['space_detail_id']}');
+        tag2 = response.data['space_detail_id'].toInt();
       } else {
         print('11 사진 못보내 버리기: ${response.data}');
       }
@@ -88,7 +86,7 @@ class _AuInformationScreenState extends State<AuInformationScreen> {
             } else {
               print(tag2);
               print(widget.image);
-              return AISafetyResultScreen(spaceId: tag2!, type: false, imgUrl: widget.image!);
+              return AISafetyResultScreen(spaceId: tag2!, type: true, imgUrl: widget.image!);
             }
           },
         ),
