@@ -1,5 +1,5 @@
-
 import 'package:camera_pj/controller/scan_controller.dart';
+import 'package:camera_pj/screen/ai_safety_result.dart';
 import 'package:camera_pj/screen/loading_quiz_screen.dart';
 import 'package:camera_pj/screen/quiz_main_screen.dart';
 import 'package:camera_pj/screen/safty_information_screen.dart';
@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../component/token_manager.dart';
 import '../controller/account_controller.dart';
+import '../controller/quiz_controller.dart';
 
 class AuInformationScreen extends StatefulWidget {
   final String? image;
@@ -24,15 +25,15 @@ class AuInformationScreen extends StatefulWidget {
   @override
   State<AuInformationScreen> createState() => _AuInformationScreenState();
 }
+
 class _AuInformationScreenState extends State<AuInformationScreen> {
   final ScanController scanController = Get.find();
-
+  late int tag2;
   Future<void> objectWithVisionPro(String file, String name, int tag) async {
     print(111);
     final dio = Dio(BaseOptions(
       connectTimeout: Duration(seconds: 30),
     ));
-
 
     var formData = FormData.fromMap({
       'image': await await MultipartFile.fromFile(file),
@@ -54,7 +55,10 @@ class _AuInformationScreenState extends State<AuInformationScreen> {
         data: formData,
       );
       if (response.statusCode == 200) {
-        debugPrint('11 사진 보내 버리기: ${response.data}');
+        debugPrint('11 사진 보내 버리기: ${response.data['Degree of Fire Danger']}');
+        setState(() {
+          tag = response.data['Degree of Fire Danger'];
+        });
       } else {
         print('11 사진 못보내 버리기: ${response.data}');
       }
@@ -65,17 +69,26 @@ class _AuInformationScreenState extends State<AuInformationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final QuizController quizController = Get.find();
+
     return Scaffold(
       body: Center(
         child: FutureBuilder<void>(
           future: objectWithVisionPro(widget.image!, widget.name!, widget.tag!),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return LoadingQuizScreen();
+              // 데이터를 불러오는 중이고 quizPost가 true인 경우 LoadingQuizScreen을 표시
+              if (quizController.quizPost) {
+                return LoadingQuizScreen();
+              } else {
+                return QuizSolveScreen(index :0);
+              }
             } else if (snapshot.hasError) {
               return Text('데이터를 불러오는 중에 오류가 발생했습니다.');
             } else {
-              return SaftyInformationScreen();
+              print(tag2);
+              print(widget.image);
+              return AISafetyResultScreen(spaceId: tag2!, type: false, imgUrl: widget.image!);
             }
           },
         ),
