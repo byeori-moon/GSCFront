@@ -4,6 +4,7 @@ import 'package:camera_pj/component/temperature_component.dart';
 import 'package:camera_pj/constant/colors.dart';
 import 'package:camera_pj/controller/object_controller.dart';
 import 'package:camera_pj/controller/space_object_controller.dart';
+import 'package:camera_pj/screen/space_detail_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,13 +33,10 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
   @override
   void initState() {
     super.initState();
+
   }
 
-  void _launchUrl(Uri url) async {
-    if (!await launchUrl(url)) {
-      throw 'Could not launch $url';
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +67,7 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                             Image.asset('asset/img/ai_result_penguin.png'),
                             Text(
                               // _loadedData!.fireHazard.object,
-                              "AI안전진단 결과 안내",
+                              "AI Safety Result",
                               style: TextStyle(
                                   fontFamily: 'OHSQUARE',
                                   fontSize: 30,
@@ -357,6 +355,41 @@ class _InformationScreenState extends State<AISafetyResultScreen> {
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical:30.0),
+                              child: SizedBox(
+                                height: 50,
+                                width: 240,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: BUTTON_BLUE,
+                                      foregroundColor: BUTTON_WHITE,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(999),
+                                      )),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.local_fire_department_outlined,
+                                        size: 20,
+                                      ),
+                                      SizedBox(
+                                        width: 4,
+                                      ),
+                                      Text(
+                                        'Go to My Place',
+                                        style: TextStyle(
+                                          fontFamily: 'OHSQUARE',
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {},
+                                ),
                               ),
                             ),
                           ],

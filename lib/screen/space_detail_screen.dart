@@ -103,9 +103,15 @@ class SpaceDetailScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image.network(
-                                  spaceDetail.thumbnailImage,
-                                  fit: BoxFit.contain,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8), // 이미지 모서리를 둥글게 처리
+                                  child: AspectRatio(
+                                    aspectRatio: 1, // 정사각형 비율 유지
+                                    child: Image.network(
+                                      spaceDetail.thumbnailImage,
+                                      fit: BoxFit.cover, // 이미지가 컨테이너 크기에 맞게 조정
+                                    ),
+                                  ),
                                 ),
                                 Text(spaceDetail.nickname),
                               ],
@@ -281,12 +287,46 @@ void showDetailModal(BuildContext context, int id, String imgUrl) {
                                                     width: 1,
                                                   )),
                                             ),
-                                            onPressed: () {
+                                            onPressed: () async {
+                                              final dio = Dio()
+                                                ..options.followRedirects = true
+                                                ..options.maxRedirects = 5;
+                                              final String baseUrl = "http://pengy.dev";
+
+                                              try {
+                                                final idToken = await TokenManager().getToken();
+                                                if (idToken != null) {
+                                                  final response = await dio.post(
+                                                    '$baseUrl/api/fire-hazards/update-check',
+                                                    options: Options(
+                                                      headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'Authorization': 'Bearer $idToken',
+                                                      },
+                                                    ),
+                                                    data: {
+                                                      'id': hazard.fireHazard.id,
+                                                    },
+                                                  );
+
+                                                  if (response.statusCode == 200) {
+                                                    print('화재 위험 체크 상태 업데이트 성공: ${response.data}');
+
+                                                  } else {
+                                                    print('화재 위험 체크 상태 업데이트 실패: ${response.data}');
+                                                  }
+
+                                                } else {
+                                                  print('인증 토큰 없음');
+                                                }
+                                              } catch (e) {
+                                                print('화재 위험 체크 상태 업데이트 중 오류 발생: $e');
+                                              }
                                               Get.to(() => InformationScreen(
-                                                    objectId:
-                                                        '${hazard.fireHazard.id}',
-                                                    type: false,
-                                                  ));
+                                                objectId:
+                                                '${hazard.fireHazard.id}',
+                                                type: false,
+                                              ));
                                             },
                                             child: Row(
                                               children: [
@@ -340,7 +380,7 @@ void showDetailModal(BuildContext context, int id, String imgUrl) {
                                     width: 4,
                                   ),
                                   Text(
-                                    'AI안전진단 결과보기',
+                                    'Go to AI Safety Result',
                                     style: TextStyle(
                                       fontFamily: 'OHSQUARE',
                                       fontSize: 16,
@@ -349,6 +389,7 @@ void showDetailModal(BuildContext context, int id, String imgUrl) {
                                 ],
                               ),
                               onPressed: () {
+
                                 Get.to(() => AISafetyResultScreen(
                                     spaceId: id, type: false, imgUrl: imgUrl));                              },
                             ),

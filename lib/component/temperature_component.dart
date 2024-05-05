@@ -21,7 +21,7 @@ class _ThermometerWidgetState extends State<ThermometerWidget> with SingleTicker
       vsync: this,
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0.8, end: 1.0).animate(
+    _animation = Tween<double>(begin: 0.9, end: 1.0).animate(
         CurvedAnimation(parent: _controller, curve: Curves.easeInOut)
     )..addListener(() {
       setState(() {});

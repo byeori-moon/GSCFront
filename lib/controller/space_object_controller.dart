@@ -50,7 +50,7 @@ class SpaceDetail {
     print("parsed space objects: ${json}");
     return SpaceDetail(
       id: json['id'],
-      thumbnailImage: 'https://storage.googleapis.com/pengy_bucket-2/e9120ab8-a0b0-45ee-bb0e-518656f2ec42-image1.jpg',
+      thumbnailImage: json['thumbnail_image'],
       nickname: json['nickname'],
       mySpace: json['my_space'],
 
