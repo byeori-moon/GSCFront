@@ -106,7 +106,7 @@ class _BeforeDartCameraState extends State<BeforeDartCamera> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '촬영하러 가기',
+                          'Take a Picture',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color(0xFFFEFDF8),
