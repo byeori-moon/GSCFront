@@ -51,7 +51,7 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.08,
                 child: Text(
-                  '이름을 등록해주세요',
+                  'Enter the Space Name',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color(0xFF97ACB8),
@@ -68,8 +68,8 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Color(0xFFFFF8F7),
-                    labelText: '이름',
-                    hintText: '이름을 입력하세요',
+                    labelText: 'Name',
+                    hintText: 'ex) Living Room, Bathroom',
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
@@ -83,7 +83,7 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: Text(
-                  '내 장소에 등록해주세요!',
+                  'Enter Your Location',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color(0xFF97ACB8),
@@ -100,7 +100,7 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Color(0xFFFFF8F7),
-                    labelText: '태그 선택',
+                    labelText: 'Tag',
                     labelStyle: TextStyle(
                       fontFamily: 'OHSQUARE',
                     ),
@@ -146,7 +146,7 @@ class _RegisterCaptureScreenState extends State<RegisterCaptureScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      '다음으로',
+                      'Next',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Color(0xFFFEFDF8),

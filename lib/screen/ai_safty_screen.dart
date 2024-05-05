@@ -76,11 +76,7 @@ class _AuInformationScreenState extends State<AuInformationScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 데이터를 불러오는 중이고 quizPost가 true인 경우 LoadingQuizScreen을 표시
-              if (quizController.quizPost) {
                 return LoadingQuizScreen();
-              } else {
-                return QuizSolveScreen(index :0);
-              }
             } else if (snapshot.hasError) {
               return Text('데이터를 불러오는 중에 오류가 발생했습니다.');
             } else {
